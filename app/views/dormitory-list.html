@@ -1,0 +1,42 @@
+<h3>宿舍信息列表
+   <small>以表格的形式展示宿舍信息，您可以进行修改，或导出相关信息</small>
+</h3>
+<div ng-controller="NGTableCtrl as table" class="container-fluid">
+   <div class="panel panel-default">
+      <div class="panel-heading">
+         <span class="pull-right">
+            <button ng-click="table.tableParams.sorting({})" class="btn btn-primary btn-sm">排序复位</button>&nbsp;<a ng-mousedown="csv.generate()" ng-href="{{ csv.link() }}" download="test.csv" class="btn btn-sm btn-info">导出为CSV文件</a>
+         </span>
+         <div class="panel-title">
+            <button type="button" class="btn btn-labeled btn-success">
+               <span class="btn-label"><i class="fa fa-plus"></i>
+               </span>增加宿舍</button>
+         </div>
+      </div>
+      <table ng-table="table.tableParams" export-csv="csv" class="table table-bordered table-striped">
+         <tbody>
+            <tr ng-repeat="user in $data">
+               <td>
+                  <div class="checkbox c-checkbox">
+                     <label>
+                        <input type="checkbox" />
+                        <span class="fa fa-check"></span>
+                     </label>
+                  </div>
+               </td>
+               <td data-title="'Name'" sortable="'name'">{{user.name}}</td>
+               <td data-title="'Age'" sortable="'age'">{{user.age}}</td>
+               <td data-title="'Money'" sortable="'money'">
+                  <span ng-class="{ 'plus': user.money &gt;= 0,'minus': user.money &lt; 0 }">{{user.money}}</span>
+               </td>
+               <td data-title="'操作'" width="80" class="text-center">
+                  <button title="编辑" data-ng-click="Modify(&quot;{{user.name}}&quot;)" class="btn btn-warning btn-xs"><i class="fa fa-pencil"></i>
+                  </button>
+                  <button title="删除" data-ng-click="Delete(&quot;{{user.name}}&quot;)" class="btn btn-danger btn-xs"><i class="fa fa-trash"></i>
+                  </button>
+               </td>
+            </tr>
+         </tbody>
+      </table>
+   </div>
+</div>
