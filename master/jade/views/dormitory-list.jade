@@ -1,32 +1,36 @@
 h3 宿舍信息列表
   small 以表格的形式展示宿舍信息，您可以进行修改，或导出相关信息
 
-.container-fluid(ng-controller="NGTableCtrl as table")
+.container-fluid(ng-controller="DormitoryListCtrl as table")
   .panel.panel-default
     .panel-heading
-      span.pull-right
+      span.pull-right.hidden-xs
         button.btn.btn-primary.btn-sm(ng-click='table.tableParams.sorting({})') 排序复位
-        &nbsp;
-        a.btn.btn-sm.btn-info(ng-mousedown='csv.generate()', ng-href='{{ csv.link() }}', download='test.csv') 导出为CSV文件
       .panel-title
         button.btn.btn-labeled.btn-success(type='button')
           span.btn-label
             i.fa.fa-plus
-          | 增加宿舍
-    table.table.table-bordered.table-striped(ng-table='table.tableParams', export-csv='csv')
+          | 新增
+        button.btn.btn-danger(type='button') 删除选中条目
+    //- ng-table指明了使用什么样的参数来创建表格，export-csv是插件ng-table-export的功能，仅能导出为csv
+    table.table(ng-table='table.tableParams')
       tbody
         tr(ng-repeat='user in $data')
-          td
+          td(width="40", header="'ng-table/headers/checkbox.html'")
             .checkbox.c-checkbox
               label
-                input(type='checkbox')
+                input(type='checkbox', ng-model="checkboxes.items[user.id]")
                 span.fa.fa-check
           td(data-title="'Name'", sortable="'name'") {{user.name}}
           td(data-title="'Age'", sortable="'age'") {{user.age}}
-          td(data-title="'Money'", sortable="'money'")
-            span(ng-class="{ 'plus': user.money >= 0,'minus': user.money < 0 }") {{user.money}}
+          td(data-title="'Money'", sortable="'money'") {{user.money}}
           td.text-center(data-title="'操作'", width="80")
             button.btn.btn-warning.btn-xs(title='编辑', data-ng-click='Modify("{{user.name}}")')
                            i.fa.fa-pencil
             button.btn.btn-danger.btn-xs(title='删除', data-ng-click='Delete("{{user.name}}")')
                            i.fa.fa-trash
+    script(type="text/ng-template", id="ng-table/headers/checkbox.html")
+      .checkbox.c-checkbox
+        label
+          input(type="checkbox", ng-model="checkboxes.checked", id="select_all", name="filter-checkbox", value="")
+          span.fa.fa-check
