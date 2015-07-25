@@ -1,51 +1,42 @@
 [
   {
-    "text": "Main Navigation",
-    "heading": "true",
-    "translate": "sidebar.heading.HEADER"
+    "text": "功能菜单",
+    "heading": "true"
+  },
+  {
+    "text": "通知中心",
+    "sref": "app.notification",
+    "icon": "icon-bell"
   },
   {
     "text": "宿舍管理",
-    "sref": "#",
-    "icon": "icon-home",
-    "submenu": [
-      {"text": "宿舍地图",       "sref": "app.dormitoryMap"},
-      {"text": "宿舍信息列表",       "sref": "app.dormitoryList" }
-    ],
-    "translate": "sidebar.nav.DORMITORY"
+    "sref": "app.dormitory",
+    "icon": "icon-home"
   },
   {
     "text": "员工管理",
     "sref": "app.employeeList",
-    "icon": "icon-users",
-    "translate": "sidebar.nav.EMPLOYEE"
-  },
-  {
-    "text": "住宿费管理",
-    "sref": "#",
-    "icon": "icon-wallet",
-    "submenu": [
-      {"text": "住宿费审核",       "sref": "app.accommodationFeeAudit"},
-      {"text": "历史记录",       "sref": "app.accommodationFeeHistory" }
-    ],
-    "translate": "sidebar.nav.ACCOMMODATION"
-  },
-
-  {
-    "text": "申请管理",
-    "sref": "#",
-    "icon": "icon-doc",
-    "submenu": [
-      {"text": "申请处理",       "sref": "app.applicationAudit"},
-      {"text": "历史记录",       "sref": "app.applicationHistory" }
-    ],
-    "translate": "sidebar.nav.APPLICATION"
+    "icon": "icon-users"
   },
   {
     "text": "账号管理",
     "sref": "app.account",
-    "icon": "icon-settings",
-    "translate": "sidebar.nav.ACCOUNT"
+    "icon": "icon-settings"
+  },
+  {
+    "text": "住宿费审核",
+    "sref": "app.accommodationFee",
+    "icon": "icon-wallet"
+  },
+  {
+    "text": "宿舍申请审核",
+    "sref": "app.dormitoryApply",
+    "icon": "icon-docs"
+  },
+  {
+    "text": "维修申请审核",
+    "sref": "app.maintenanceApply",
+    "icon": "icon-wrench"
   },
   {
     "text": "Widgets",

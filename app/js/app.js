@@ -23,11 +23,11 @@ App.run(["$rootScope", "$state", "$stateParams",  '$window', '$templateCache', f
   $rootScope.$storage = $window.localStorage;
 
   // Uncomment this to disable template cache
-  $rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams) {
+  /*$rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams) {
       if (typeof(toState) !== 'undefined'){
         $templateCache.remove(toState.templateUrl);
       }
-  });
+  });*/
 
   // Scope Globals
   // ----------------------------------- 
@@ -75,6 +75,7 @@ function ($stateProvider, $locationProvider, $urlRouterProvider, helper) {
 
   // 路由表（包括地址、继承关系、模板的url、controller、需要引用的模块、stateParams）  
   $stateProvider
+    // 跟路由
     .state('app', {
         url: '/app',
         abstract: true,
@@ -82,12 +83,21 @@ function ($stateProvider, $locationProvider, $urlRouterProvider, helper) {
         controller: 'AppController',
         resolve: helper.resolveFor('fastclick', 'modernizr', 'icons', 'screenfull', 'animo', 'sparklines', 'slimscroll', 'classyloader', 'toaster', 'whirl')
     })
-    .state('app.dormitoryMap', {
-        url: '/dormitoryMap',
-        title: '宿舍地图',
-        templateUrl: helper.basepath('maps-vector.html'),
-        controller: 'VectorMapController',
+    // 通知中心
+    .state('app.notification', {
+        url: '/notification',
+        title: '通知中心',
+        templateUrl: helper.basepath('notification.html'),
+        controller: 'NotificationController',
         resolve: helper.resolveFor('vector-map', 'vector-map-maps')
+    })
+    // 宿舍管理
+    .state('app.dormitory', {
+        url: '/dormitory',
+        title: '宿舍管理',
+        templateUrl: helper.basepath('dormitory.html'),
+        controller: 'DormitoryController',
+        resolve: helper.resolveFor('ngTable', 'ngTableExport','ngDialog','vector-map', 'vector-map-maps')
     })
     .state('app.dormitoryList', {
         url: '/dormitoryList',
@@ -808,6 +818,254 @@ App
     ]
   })
 ;
+/**=========================================================
+ * Module: main.js
+ * Main Application Controller
+ =========================================================*/
+
+App.controller('AppController',
+  ['$rootScope', '$scope', '$state', '$translate', '$window', '$localStorage', '$timeout', 'toggleStateService', 'colors', 'browser', 'cfpLoadingBar',
+  function($rootScope, $scope, $state, $translate, $window, $localStorage, $timeout, toggle, colors, browser, cfpLoadingBar) {
+    "use strict";
+
+    // Setup the layout mode
+    $rootScope.app.layout.horizontal = ( $rootScope.$stateParams.layout == 'app-h') ;
+
+    // Loading bar transition
+    // ----------------------------------- 
+    var thBar;
+    $rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams) {
+        if($('.wrapper > section').length) // check if bar container exists
+          thBar = $timeout(function() {
+            cfpLoadingBar.start();
+          }, 0); // sets a latency Threshold
+    });
+    $rootScope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams) {
+        event.targetScope.$watch("$viewContentLoaded", function () {
+          $timeout.cancel(thBar);
+          cfpLoadingBar.complete();
+        });
+    });
+
+
+    // Hook not found
+    $rootScope.$on('$stateNotFound',
+      function(event, unfoundState, fromState, fromParams) {
+          console.log(unfoundState.to); // "lazy.state"
+          console.log(unfoundState.toParams); // {a:1, b:2}
+          console.log(unfoundState.options); // {inherit:false} + default options
+      });
+    // Hook error
+    $rootScope.$on('$stateChangeError',
+      function(event, toState, toParams, fromState, fromParams, error){
+        console.log(error);
+      });
+    // Hook success
+    $rootScope.$on('$stateChangeSuccess',
+      function(event, toState, toParams, fromState, fromParams) {
+        // display new view from top
+        $window.scrollTo(0, 0);
+        // Save the route title
+        $rootScope.currTitle = $state.current.title;
+      });
+
+    $rootScope.currTitle = $state.current.title;
+    $rootScope.pageTitle = function() {
+      var title = $rootScope.app.name + ' - ' + ($rootScope.currTitle || $rootScope.app.description);
+      document.title = title;
+      return title;
+    };
+
+    // iPad may presents ghost click issues
+    // if( ! browser.ipad )
+      // FastClick.attach(document.body);
+
+    // Close submenu when sidebar change from collapsed to normal
+    $rootScope.$watch('app.layout.isCollapsed', function(newValue, oldValue) {
+      if( newValue === false )
+        $rootScope.$broadcast('closeSidebarMenu');
+    });
+
+    // Restore layout settings
+    if( angular.isDefined($localStorage.layout) )
+      $scope.app.layout = $localStorage.layout;
+    else
+      $localStorage.layout = $scope.app.layout;
+
+    $rootScope.$watch("app.layout", function () {
+      $localStorage.layout = $scope.app.layout;
+    }, true);
+
+    
+    // Allows to use branding color with interpolation
+    // {{ colorByName('primary') }}
+    $scope.colorByName = colors.byName;
+
+    // Hides/show user avatar on sidebar
+    $scope.toggleUserBlock = function(){
+      $scope.$broadcast('toggleUserBlock');
+    };
+
+    // Internationalization
+    // ----------------------
+
+    $scope.language = {
+      // Handles language dropdown
+      listIsOpen: false,
+      // list of available languages
+      available: {
+        'zh-CN':    '简体中文'
+      },
+      // display always the current ui language
+      init: function () {
+        var proposedLanguage = $translate.proposedLanguage() || $translate.use();
+        var preferredLanguage = $translate.preferredLanguage(); // we know we have set a preferred one in app.config
+        $scope.language.selected = $scope.language.available[ (proposedLanguage || preferredLanguage) ];
+      },
+      set: function (localeId, ev) {
+        // Set the new idiom
+        $translate.use(localeId);
+        // save a reference for the current language
+        $scope.language.selected = $scope.language.available[localeId];
+        // finally toggle dropdown
+        $scope.language.listIsOpen = ! $scope.language.listIsOpen;
+      }
+    };
+
+    $scope.language.init();
+
+    // Restore application classes state
+    toggle.restoreState( $(document.body) );
+
+    // cancel click event easily
+    $rootScope.cancel = function($event) {
+      $event.stopPropagation();
+    };
+
+}]);
+
+App.controller('DormitoryController', [
+    '$scope', '$http', '$state','$filter','ngTableParams','$resource', '$timeout', 'ngTableDataService', 'ngDialog', 'ShareService',
+    function($scope, $http, $state, $filter, ngTableParams, $resource, $timeout, ngTableDataService, ngDialog, ShareService) {
+
+    'use strict';
+    var vm = this;
+    var data = [{id: 1, name: "Moroni", age: 50, money: -10},
+                {id: 2, name: "Tiancum", age: 43,money: 120},
+                {id: 3, name: "Jacob", age: 27, money: 5.5},
+                {id: 4, name: "Nephi", age: 29,money: -54},
+                {id: 5, name: "Enos", age: 34,money: 110},
+                {id: 6, name: "Tiancum", age: 43, money: 1000},
+                {id: 7, name: "Jacob", age: 27,money: -201},
+                {id: 8, name: "Nephi", age: 29, money: 100},
+                {id: 9, name: "Enos", age: 34, money: -52.5},
+                {id: 10, name: "Tiancum", age: 43, money: 52.1},
+                {id: 11, name: "Jacob", age: 27, money: 110},
+                {id: 12, name: "Nephi", age: 29, money: -55},
+                {id: 13, name: "Enos", age: 34, money: 551},
+                {id: 14, name: "Tiancum", age: 43, money: -1410},
+                {id: 15, name: "Jacob", age: 27, money: 410},
+                {id: 16, name: "Nephi", age: 29, money: 100},
+                {id: 17, name: "Enos", age: 34, money: -100}];
+
+    vm.tableParams = new ngTableParams({
+        page: 1,            // show first page
+        count: 10           // count per page
+    }, {
+        total: data.length, // length of data
+        getData: function($defer, params) {
+            var orderedData = params.sorting() ?
+            $filter('orderBy')(data, params.orderBy()) :
+            data;
+            orderedData = params.filter() ?
+            $filter('filter')(orderedData, params.filter()) :
+            orderedData;
+
+            params.total(orderedData.length); // set total for recalc pagination
+            $defer.resolve($scope.users = orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count()));
+        }
+    });
+
+    var inArray = Array.prototype.indexOf ?
+    function (val, arr) {
+        return arr.indexOf(val)
+    } :
+    function (val, arr) {
+        var i = arr.length;
+        while (i--) {
+            if (arr[i] === val) return i;
+        }
+        return -1
+    };
+    $scope.names = function(column) {
+        var def = $q.defer(),
+        arr = [],
+        names = [];
+        angular.forEach(data, function(item){
+            if (inArray(item.name, arr) === -1) {
+                arr.push(item.name);
+                names.push({
+                    'id': item.name,
+                    'title': item.name
+                });
+            }
+        });
+        def.resolve(names);
+        return def;
+    };
+
+    $scope.checkboxes = { 'checked': false, items: {} };
+
+    // 监视总checkbox
+    $scope.$watch('checkboxes.checked', function(value) {
+        angular.forEach($scope.users, function(item) {
+            if (angular.isDefined(item.id)) {
+                $scope.checkboxes.items[item.id] = value;
+            }
+        });
+    });
+
+    // 监视子checkbox
+    $scope.$watch('checkboxes.items', function(values) {
+        if (!$scope.users) {
+            return;
+        }
+        var checked = 0, unchecked = 0,
+        total = $scope.users.length;
+        angular.forEach($scope.users, function(item) {
+            checked   +=  ($scope.checkboxes.items[item.id]) || 0;
+            unchecked += (!$scope.checkboxes.items[item.id]) || 0;
+        });
+        if ((unchecked == 0) || (checked == 0)) {
+            $scope.checkboxes.checked = (checked == total);
+        }
+        // grayed checkbox
+        angular.element(document.getElementById("select_all")).prop("indeterminate", (checked != 0 && unchecked != 0));
+    }, true);
+
+    // 每一行的修改按钮
+    $scope.modify = function($user) {
+        ShareService.setData(angular.copy($user));
+        ngDialog.open({ template: 'modifyDialog', controller: 'DormitoryModifyController', data: {user: $user} });
+    }
+}]);
+
+App.controller('DormitoryModifyController', [
+  "$scope", "ngDialog", "ShareService",
+  function ($scope, ngDialog, ShareService) {
+  'user strict';
+  $scope.modifiyingUser = ShareService.getData();
+  $scope.submitModify = function () {
+    console.log($scope.modifiyingUser);
+  };
+  $scope.cancel = function() {
+    ngDialog.close();
+  }
+}]);
+App.controller('NotificationController', ['$scope', '$http', '$state', function($scope, $http, $state) {
+
+}]);
+
 /**=========================================================
  * Module: access-login.js
  * Demo for login api
@@ -2600,106 +2858,6 @@ App.controller('TypeaheadCtrl', ['$scope', '$http', function ($scope, $http) {
   $scope.statesWithFlags = [{'name':'Alabama','flag':'5/5c/Flag_of_Alabama.svg/45px-Flag_of_Alabama.svg.png'},{'name':'Alaska','flag':'e/e6/Flag_of_Alaska.svg/43px-Flag_of_Alaska.svg.png'},{'name':'Arizona','flag':'9/9d/Flag_of_Arizona.svg/45px-Flag_of_Arizona.svg.png'},{'name':'Arkansas','flag':'9/9d/Flag_of_Arkansas.svg/45px-Flag_of_Arkansas.svg.png'},{'name':'California','flag':'0/01/Flag_of_California.svg/45px-Flag_of_California.svg.png'},{'name':'Colorado','flag':'4/46/Flag_of_Colorado.svg/45px-Flag_of_Colorado.svg.png'},{'name':'Connecticut','flag':'9/96/Flag_of_Connecticut.svg/39px-Flag_of_Connecticut.svg.png'},{'name':'Delaware','flag':'c/c6/Flag_of_Delaware.svg/45px-Flag_of_Delaware.svg.png'},{'name':'Florida','flag':'f/f7/Flag_of_Florida.svg/45px-Flag_of_Florida.svg.png'},{'name':'Georgia','flag':'5/54/Flag_of_Georgia_%28U.S._state%29.svg/46px-Flag_of_Georgia_%28U.S._state%29.svg.png'},{'name':'Hawaii','flag':'e/ef/Flag_of_Hawaii.svg/46px-Flag_of_Hawaii.svg.png'},{'name':'Idaho','flag':'a/a4/Flag_of_Idaho.svg/38px-Flag_of_Idaho.svg.png'},{'name':'Illinois','flag':'0/01/Flag_of_Illinois.svg/46px-Flag_of_Illinois.svg.png'},{'name':'Indiana','flag':'a/ac/Flag_of_Indiana.svg/45px-Flag_of_Indiana.svg.png'},{'name':'Iowa','flag':'a/aa/Flag_of_Iowa.svg/44px-Flag_of_Iowa.svg.png'},{'name':'Kansas','flag':'d/da/Flag_of_Kansas.svg/46px-Flag_of_Kansas.svg.png'},{'name':'Kentucky','flag':'8/8d/Flag_of_Kentucky.svg/46px-Flag_of_Kentucky.svg.png'},{'name':'Louisiana','flag':'e/e0/Flag_of_Louisiana.svg/46px-Flag_of_Louisiana.svg.png'},{'name':'Maine','flag':'3/35/Flag_of_Maine.svg/45px-Flag_of_Maine.svg.png'},{'name':'Maryland','flag':'a/a0/Flag_of_Maryland.svg/45px-Flag_of_Maryland.svg.png'},{'name':'Massachusetts','flag':'f/f2/Flag_of_Massachusetts.svg/46px-Flag_of_Massachusetts.svg.png'},{'name':'Michigan','flag':'b/b5/Flag_of_Michigan.svg/45px-Flag_of_Michigan.svg.png'},{'name':'Minnesota','flag':'b/b9/Flag_of_Minnesota.svg/46px-Flag_of_Minnesota.svg.png'},{'name':'Mississippi','flag':'4/42/Flag_of_Mississippi.svg/45px-Flag_of_Mississippi.svg.png'},{'name':'Missouri','flag':'5/5a/Flag_of_Missouri.svg/46px-Flag_of_Missouri.svg.png'},{'name':'Montana','flag':'c/cb/Flag_of_Montana.svg/45px-Flag_of_Montana.svg.png'},{'name':'Nebraska','flag':'4/4d/Flag_of_Nebraska.svg/46px-Flag_of_Nebraska.svg.png'},{'name':'Nevada','flag':'f/f1/Flag_of_Nevada.svg/45px-Flag_of_Nevada.svg.png'},{'name':'New Hampshire','flag':'2/28/Flag_of_New_Hampshire.svg/45px-Flag_of_New_Hampshire.svg.png'},{'name':'New Jersey','flag':'9/92/Flag_of_New_Jersey.svg/45px-Flag_of_New_Jersey.svg.png'},{'name':'New Mexico','flag':'c/c3/Flag_of_New_Mexico.svg/45px-Flag_of_New_Mexico.svg.png'},{'name':'New York','flag':'1/1a/Flag_of_New_York.svg/46px-Flag_of_New_York.svg.png'},{'name':'North Carolina','flag':'b/bb/Flag_of_North_Carolina.svg/45px-Flag_of_North_Carolina.svg.png'},{'name':'North Dakota','flag':'e/ee/Flag_of_North_Dakota.svg/38px-Flag_of_North_Dakota.svg.png'},{'name':'Ohio','flag':'4/4c/Flag_of_Ohio.svg/46px-Flag_of_Ohio.svg.png'},{'name':'Oklahoma','flag':'6/6e/Flag_of_Oklahoma.svg/45px-Flag_of_Oklahoma.svg.png'},{'name':'Oregon','flag':'b/b9/Flag_of_Oregon.svg/46px-Flag_of_Oregon.svg.png'},{'name':'Pennsylvania','flag':'f/f7/Flag_of_Pennsylvania.svg/45px-Flag_of_Pennsylvania.svg.png'},{'name':'Rhode Island','flag':'f/f3/Flag_of_Rhode_Island.svg/32px-Flag_of_Rhode_Island.svg.png'},{'name':'South Carolina','flag':'6/69/Flag_of_South_Carolina.svg/45px-Flag_of_South_Carolina.svg.png'},{'name':'South Dakota','flag':'1/1a/Flag_of_South_Dakota.svg/46px-Flag_of_South_Dakota.svg.png'},{'name':'Tennessee','flag':'9/9e/Flag_of_Tennessee.svg/46px-Flag_of_Tennessee.svg.png'},{'name':'Texas','flag':'f/f7/Flag_of_Texas.svg/45px-Flag_of_Texas.svg.png'},{'name':'Utah','flag':'f/f6/Flag_of_Utah.svg/45px-Flag_of_Utah.svg.png'},{'name':'Vermont','flag':'4/49/Flag_of_Vermont.svg/46px-Flag_of_Vermont.svg.png'},{'name':'Virginia','flag':'4/47/Flag_of_Virginia.svg/44px-Flag_of_Virginia.svg.png'},{'name':'Washington','flag':'5/54/Flag_of_Washington.svg/46px-Flag_of_Washington.svg.png'},{'name':'West Virginia','flag':'2/22/Flag_of_West_Virginia.svg/46px-Flag_of_West_Virginia.svg.png'},{'name':'Wisconsin','flag':'2/22/Flag_of_Wisconsin.svg/45px-Flag_of_Wisconsin.svg.png'},{'name':'Wyoming','flag':'b/bc/Flag_of_Wyoming.svg/43px-Flag_of_Wyoming.svg.png'}];
 
 }]);
-App.controller('DormitoryListCtrl', DormitoryListCtrl);
-
-function DormitoryListCtrl($scope, $filter, ngTableParams, $resource, $timeout, ngTableDataService) {
-    'use strict';
-    var vm = this;
-    var data = [{id: 1, name: "Moroni", age: 50, money: -10},
-        {id: 2, name: "Tiancum", age: 43,money: 120},
-        {id: 3, name: "Jacob", age: 27, money: 5.5},
-        {id: 4, name: "Nephi", age: 29,money: -54},
-        {id: 5, name: "Enos", age: 34,money: 110},
-        {id: 6, name: "Tiancum", age: 43, money: 1000},
-        {id: 7, name: "Jacob", age: 27,money: -201},
-        {id: 8, name: "Nephi", age: 29, money: 100},
-        {id: 9, name: "Enos", age: 34, money: -52.5},
-        {id: 10, name: "Tiancum", age: 43, money: 52.1},
-        {id: 11, name: "Jacob", age: 27, money: 110},
-        {id: 12, name: "Nephi", age: 29, money: -55},
-        {id: 13, name: "Enos", age: 34, money: 551},
-        {id: 14, name: "Tiancum", age: 43, money: -1410},
-        {id: 15, name: "Jacob", age: 27, money: 410},
-        {id: 16, name: "Nephi", age: 29, money: 100},
-        {id: 17, name: "Enos", age: 34, money: -100}];
-
-    vm.tableParams = new ngTableParams({
-        page: 1,            // show first page
-        count: 10           // count per page
-    }, {
-        total: data.length, // length of data
-        getData: function($defer, params) {
-            var orderedData = params.sorting() ?
-                    $filter('orderBy')(data, params.orderBy()) :
-                    data;
-            orderedData = params.filter() ?
-                    $filter('filter')(orderedData, params.filter()) :
-                    orderedData;
-
-            params.total(orderedData.length); // set total for recalc pagination
-            $defer.resolve($scope.users = orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count()));
-        }
-    });
-
-    var inArray = Array.prototype.indexOf ?
-            function (val, arr) {
-                return arr.indexOf(val)
-            } :
-            function (val, arr) {
-                var i = arr.length;
-                while (i--) {
-                    if (arr[i] === val) return i;
-                }
-                return -1
-            };
-    $scope.names = function(column) {
-        var def = $q.defer(),
-                arr = [],
-                names = [];
-        angular.forEach(data, function(item){
-            if (inArray(item.name, arr) === -1) {
-                arr.push(item.name);
-                names.push({
-                    'id': item.name,
-                    'title': item.name
-                });
-            }
-        });
-        def.resolve(names);
-        return def;
-    };
-
-    $scope.checkboxes = { 'checked': false, items: {} };
-
-    // watch for check all checkbox
-    $scope.$watch('checkboxes.checked', function(value) {
-        angular.forEach($scope.users, function(item) {
-            if (angular.isDefined(item.id)) {
-                $scope.checkboxes.items[item.id] = value;
-            }
-        });
-    });
-
-    // watch for data checkboxes
-    $scope.$watch('checkboxes.items', function(values) {
-        if (!$scope.users) {
-            return;
-        }
-        var checked = 0, unchecked = 0,
-                total = $scope.users.length;
-        angular.forEach($scope.users, function(item) {
-            checked   +=  ($scope.checkboxes.items[item.id]) || 0;
-            unchecked += (!$scope.checkboxes.items[item.id]) || 0;
-        });
-        if ((unchecked == 0) || (checked == 0)) {
-            $scope.checkboxes.checked = (checked == total);
-        }
-        // grayed checkbox
-        angular.element(document.getElementById("select_all")).prop("indeterminate", (checked != 0 && unchecked != 0));
-    }, true);
-
-}
-DormitoryListCtrl.$inject = ["$scope", "$filter", "ngTableParams", "$resource", "$timeout", "ngTableDataService"];
 /**=========================================================
  * Module: flot-chart.js
  * Setup options and data for flot chart directive
@@ -3459,132 +3617,6 @@ App.factory('mails', ['$http', function ($http) {
   };
   return factory;
 }]);
-/**=========================================================
- * Module: main.js
- * Main Application Controller
- =========================================================*/
-
-App.controller('AppController',
-  ['$rootScope', '$scope', '$state', '$translate', '$window', '$localStorage', '$timeout', 'toggleStateService', 'colors', 'browser', 'cfpLoadingBar',
-  function($rootScope, $scope, $state, $translate, $window, $localStorage, $timeout, toggle, colors, browser, cfpLoadingBar) {
-    "use strict";
-
-    // Setup the layout mode
-    $rootScope.app.layout.horizontal = ( $rootScope.$stateParams.layout == 'app-h') ;
-
-    // Loading bar transition
-    // ----------------------------------- 
-    var thBar;
-    $rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams) {
-        if($('.wrapper > section').length) // check if bar container exists
-          thBar = $timeout(function() {
-            cfpLoadingBar.start();
-          }, 0); // sets a latency Threshold
-    });
-    $rootScope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams) {
-        event.targetScope.$watch("$viewContentLoaded", function () {
-          $timeout.cancel(thBar);
-          cfpLoadingBar.complete();
-        });
-    });
-
-
-    // Hook not found
-    $rootScope.$on('$stateNotFound',
-      function(event, unfoundState, fromState, fromParams) {
-          console.log(unfoundState.to); // "lazy.state"
-          console.log(unfoundState.toParams); // {a:1, b:2}
-          console.log(unfoundState.options); // {inherit:false} + default options
-      });
-    // Hook error
-    $rootScope.$on('$stateChangeError',
-      function(event, toState, toParams, fromState, fromParams, error){
-        console.log(error);
-      });
-    // Hook success
-    $rootScope.$on('$stateChangeSuccess',
-      function(event, toState, toParams, fromState, fromParams) {
-        // display new view from top
-        $window.scrollTo(0, 0);
-        // Save the route title
-        $rootScope.currTitle = $state.current.title;
-      });
-
-    $rootScope.currTitle = $state.current.title;
-    $rootScope.pageTitle = function() {
-      var title = $rootScope.app.name + ' - ' + ($rootScope.currTitle || $rootScope.app.description);
-      document.title = title;
-      return title;
-    };
-
-    // iPad may presents ghost click issues
-    // if( ! browser.ipad )
-      // FastClick.attach(document.body);
-
-    // Close submenu when sidebar change from collapsed to normal
-    $rootScope.$watch('app.layout.isCollapsed', function(newValue, oldValue) {
-      if( newValue === false )
-        $rootScope.$broadcast('closeSidebarMenu');
-    });
-
-    // Restore layout settings
-    if( angular.isDefined($localStorage.layout) )
-      $scope.app.layout = $localStorage.layout;
-    else
-      $localStorage.layout = $scope.app.layout;
-
-    $rootScope.$watch("app.layout", function () {
-      $localStorage.layout = $scope.app.layout;
-    }, true);
-
-    
-    // Allows to use branding color with interpolation
-    // {{ colorByName('primary') }}
-    $scope.colorByName = colors.byName;
-
-    // Hides/show user avatar on sidebar
-    $scope.toggleUserBlock = function(){
-      $scope.$broadcast('toggleUserBlock');
-    };
-
-    // Internationalization
-    // ----------------------
-
-    $scope.language = {
-      // Handles language dropdown
-      listIsOpen: false,
-      // list of available languages
-      available: {
-        'zh-CN':    '简体中文'
-      },
-      // display always the current ui language
-      init: function () {
-        var proposedLanguage = $translate.proposedLanguage() || $translate.use();
-        var preferredLanguage = $translate.preferredLanguage(); // we know we have set a preferred one in app.config
-        $scope.language.selected = $scope.language.available[ (proposedLanguage || preferredLanguage) ];
-      },
-      set: function (localeId, ev) {
-        // Set the new idiom
-        $translate.use(localeId);
-        // save a reference for the current language
-        $scope.language.selected = $scope.language.available[localeId];
-        // finally toggle dropdown
-        $scope.language.listIsOpen = ! $scope.language.listIsOpen;
-      }
-    };
-
-    $scope.language.init();
-
-    // Restore application classes state
-    toggle.restoreState( $(document.body) );
-
-    // cancel click event easily
-    $rootScope.cancel = function($event) {
-      $event.stopPropagation();
-    };
-
-}]);
-
 /**=========================================================
  * Module: modals.js
  * Provides a simple way to implement bootstrap modals from templates
@@ -6961,6 +6993,18 @@ App.service('DormitoryService', function() {
   
   return TableData;
 
+});
+
+App.service('ShareService', function() {
+  var data;
+  return {
+      getData: function () {
+          return data;
+      },
+      setData: function(_data) {
+          data = _data;
+      }
+  };
 });
 
 /**=========================================================

@@ -16,6 +16,7 @@ function ($stateProvider, $locationProvider, $urlRouterProvider, helper) {
 
   // 路由表（包括地址、继承关系、模板的url、controller、需要引用的模块、stateParams）  
   $stateProvider
+    // 跟路由
     .state('app', {
         url: '/app',
         abstract: true,
@@ -23,12 +24,21 @@ function ($stateProvider, $locationProvider, $urlRouterProvider, helper) {
         controller: 'AppController',
         resolve: helper.resolveFor('fastclick', 'modernizr', 'icons', 'screenfull', 'animo', 'sparklines', 'slimscroll', 'classyloader', 'toaster', 'whirl')
     })
-    .state('app.dormitoryMap', {
-        url: '/dormitoryMap',
-        title: '宿舍地图',
-        templateUrl: helper.basepath('maps-vector.html'),
-        controller: 'VectorMapController',
+    // 通知中心
+    .state('app.notification', {
+        url: '/notification',
+        title: '通知中心',
+        templateUrl: helper.basepath('notification.html'),
+        controller: 'NotificationController',
         resolve: helper.resolveFor('vector-map', 'vector-map-maps')
+    })
+    // 宿舍管理
+    .state('app.dormitory', {
+        url: '/dormitory',
+        title: '宿舍管理',
+        templateUrl: helper.basepath('dormitory.html'),
+        controller: 'DormitoryController',
+        resolve: helper.resolveFor('ngTable', 'ngTableExport','ngDialog','vector-map', 'vector-map-maps')
     })
     .state('app.dormitoryList', {
         url: '/dormitoryList',

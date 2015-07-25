@@ -20,71 +20,34 @@ nav.navbar.topnavbar(role='navigation')
           // Button to show/hide the sidebar on mobile. Visible on mobile only.
           a(href='#', toggle-state="aside-toggled", no-persist).visible-xs.sidebar-toggle
             em.fa.fa-navicon
-        // START User avatar toggle
-        li
-          // Button used to collapse the left sidebar. Only visible on tablet and desktops
-          a(href='#', ng-click="toggleUserBlock()")
-            em.icon-user
-        // END User avatar toggle
-        // START lock screen
-        li
-          a(ui-sref="page.lock", title="Lock screen")
-            em.icon-lock
-        // END lock screen
       // END Left navbar
 
       // START Right Navbar
       ul.nav.navbar-nav.navbar-right
-        // Search icon
-        li
-          a(href='#', search-open)
-            em.icon-magnifier
-        // Fullscreen (only desktops)
-        li.visible-lg
-          a(href='#', toggle-fullscreen)
-            em.fa.fa-expand
-        // START Alert menu
+
+        // START User menu
         li.dropdown.dropdown-list(dropdown="")
           a(dropdown-toggle="")
-            em.icon-bell
-            .label.label-danger 11
+            b 集团办公室&nbsp;&nbsp;
+            b.caret
           // START Dropdown menu
-          ul.dropdown-menu(class="animated flipInX")
+          ul.dropdown-menu(class="animated flipInY")
             li
               // START list group
               .list-group
-                // list item
                 a.list-group-item(href='#')
-                  .media-box
-                    .pull-left
-                      em.fa.fa-twitter.fa-2x.text-info
-                    .media-box-body.clearfix
-                        p.m0 New followers
-                        p.m0.text-muted: small 1 new follower
-                // list item
+                  small 修改密码
                 a.list-group-item(href='#')
-                  .media-box
-                    .pull-left
-                      em.fa.fa-envelope.fa-2x.text-warning
-                    .media-box-body.clearfix
-                        p.m0 New e-mails
-                        p.m0.text-muted: small You have 10 new emails
-                // list item
-                a.list-group-item(href='#')
-                  .media-box
-                    .pull-left
-                      em.fa.fa-tasks.fa-2x.text-success
-                    .media-box-body.clearfix
-                        p.m0 Pending Tasks
-                        p.m0.text-muted: small 11 pending task
-
-                // last list item 
-                a.list-group-item(href='#')
-                  small(translate="topbar.notification.MORE") More notifications
-                  span.label.label-danger.pull-right 14
+                  small 注销
               // END list group
           // END Dropdown menu
         // END Alert menu
+
+        // Fullscreen (only desktops)
+        li.visible-lg.visible-md
+          a(href='#', toggle-fullscreen)
+            em.fa.fa-expand
+        
         // START Contacts button
         li
           a(href='#', toggle-state="offsidebar-open", no-persist)
@@ -92,13 +55,5 @@ nav.navbar.topnavbar(role='navigation')
         // END Contacts menu
       // END Right Navbar
     // END Nav wrapper
-    
-    // START Search form
-    form.navbar-form(role='search', action="search.html")
-      .form-group.has-feedback
-        input.form-control(type='text', placeholder="{{ 'topbar.search.PLACEHOLDER' | translate }}")
-        .fa.fa-times.form-control-feedback(search-dismiss)
-      button.hidden.btn.btn-default(type='submit') Submit
-    // END Search form
 
 // END Top Navbar
