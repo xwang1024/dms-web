@@ -1,4 +1,4 @@
-h3 宿舍管理
+h3 宿舍信息
   small.pull-right
     ol.breadcrumb
       li
@@ -10,14 +10,41 @@ tabset
   tab(heading='地理视图', ng-controller="DormitoryMapController")
     div(dormitory-map="", height='600', scale=0, map-name="world_mill_en")
   tab(heading='列表视图', ng-controller="DormitoryController as table")
-    .panel-heading
+    .h4 宿舍列表
       form.pull-right.hidden-xs.form-inline
-
-        button.btn.btn-danger.btn-sm(type='button') 批量删除
-        button.btn.btn-primary.btn-sm(ng-click='table.tableParams.sorting({})') 排序复位
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        // START box placeholder
+        .btn-group(dropdown='dropdown')
+          button.btn.btn-default(dropdown-toggle="") 全部校区
+            b.caret
+          ul.dropdown-menu(role='menu')
+            li
+              a(href='#') 鼓楼
+            li
+              a(href='#') 仙林
+        // END button group
+        // START box placeholder
+        .btn-group(dropdown='dropdown')
+          button.btn.btn-default(dropdown-toggle="") 全部楼幢
+            b.caret
+          ul.dropdown-menu(role='menu')
+            li
+              a(href='#') 小粉桥平房
+            li
+              a(href='#') 陶园新村
+        // END button group
+        // START box placeholder
+        .btn-group(dropdown='dropdown')
+          button.btn.btn-default(dropdown-toggle="") 全部楼层
+            b.caret
+          ul.dropdown-menu(role='menu')
+            li
+              a(href='#') 1层
+            li
+              a(href='#') 2层
+        // END button group
         input.form-control.input-sm.form-horizontal(type='text', ng-model="searchDormitory", placeholder='表格搜索...')
-      .panel-title 宿舍列表
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        button.btn.btn-default.btn-sm(ng-click='table.tableParams.sorting({})') 复位
         
     //- ng-table指明了使用什么样的参数来创建表格，export-csv是插件ng-table-export的功能，仅能导出为csv
     table.table(ng-table='table.tableParams')
@@ -28,14 +55,20 @@ tabset
               label
                 input(type='checkbox', ng-model="checkboxes.items[user.id]")
                 span.fa.fa-check
-          td(data-title="'姓名'", sortable="'name'") {{user.name}}
-          td(data-title="'年龄'", sortable="'age'") {{user.age}}
-          td(data-title="'费用'", sortable="'money'") {{user.money}}
+          td(data-title="'详细地址'", sortable="'campus'") 鼓楼 - 小粉桥平房 - 1层 - 101
+          td.text-center(data-title="'类型'", sortable="'type'", width="100") 集体宿舍 - 男
+          td.text-center(data-title="'核定'", sortable="'capacityCnt'", width="70") 3
+          td.text-center(data-title="'实际'", sortable="'occupiedCnt'", width="70") 2
+          td(data-title="'住户'")
+            .btn.btn-primary.btn-xs 王大锤
+            .btn.btn-primary.btn-xs 王二锤
+            .btn.btn-primary.btn-xs 王三锤
+            .btn.btn-primary.btn-xs 王四锤
           td.text-center(data-title="'操作'", width="80")
             button.btn.btn-warning.btn-xs(title='编辑', data-ng-click='modify(user)')
                            i.fa.fa-pencil
-            button.btn.btn-danger.btn-xs(title='删除', data-ng-click='delete(user)')
-                           i.fa.fa-trash
+            button.btn.btn-success.btn-xs(title='详情', data-ng-click='info(user)')
+                           i.fa.fa-ellipsis-h
     // 自定义表头checkbox的template
     script(type="text/ng-template", id="ng-table/headers/checkbox.html")
       .checkbox.c-checkbox
@@ -50,19 +83,23 @@ tabset
         h3.mt0 修改宿舍信息
       form.form-horizontal(method='get', action="/")
         .form-group
-          label.col-sm-2.control-label(for='input-id') ID
+          label.col-sm-2.control-label(for='input-name') 地址
           .col-sm-10
-            input#input-id-1.form-control(type='text', disabled, ng-model="modifiyingUser.id")
+            input#input-id-1.form-control(type='text', disabled, ng-model="modifiyingUser.name")
         .form-group
-          label.col-sm-2.control-label(for='input-name') 姓名
-          .col-sm-10
-            input#input-id-1.form-control(type='text', ng-maxlength="16", ng-model="modifiyingUser.name")
-        .form-group
-          label.col-sm-2.control-label(for='input-age') 年龄
+          label.col-sm-2.control-label(for='input-age') 宿舍号
           .col-sm-10
             input#input-id-1.form-control(type='text', ng-pattern="/^[0-9]+$/", ng-model="modifiyingUser.age")
         .form-group
-          label.col-sm-2.control-label(for='input-money') 费用
+          label.col-sm-2.control-label(for='input-age') 类型
+          .col-sm-10
+            input#input-id-1.form-control(type='text', ng-pattern="/^[0-9]+$/", ng-model="modifiyingUser.age")
+        .form-group
+          label.col-sm-2.control-label(for='input-money') 核定
+          .col-sm-10
+            input#input-id-1.form-control(type='number', ng-model="modifiyingUser.money")
+        .form-group
+          label.col-sm-2.control-label(for='input-money') 实际
           .col-sm-10
             input#input-id-1.form-control(type='number', ng-model="modifiyingUser.money")
       .row
