@@ -1,9 +1,4 @@
-/**=========================================================
- * Module: vector-map.js.js
- * Init jQuery Vector Map plugin
- =========================================================*/
-
-App.directive('vectorMapss', ['vectorMap', function(vectorMap){
+App.directive('dormitoryMap', ['vectorMap','$timeout', function(vectorMap, $timeout){
   'use strict';
 
   var defaultColors = {
@@ -29,7 +24,10 @@ App.directive('vectorMapss', ['vectorMap', function(vectorMap){
       
       element.css('height', mapHeight);
       
-      vectorMap.init( element , options, scope.seriesData, scope.markersData);
+      vectorMap.init(element , options, scope.seriesData, scope.markersData);
+      $timeout(function() {
+        element.resize();
+    }, 0)
     }
   };
 

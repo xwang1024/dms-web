@@ -28,17 +28,32 @@ App.controller('DormitoryController', [
     }, {
         total: data.length, // length of data
         getData: function($defer, params) {
-            var orderedData = params.sorting() ?
-            $filter('orderBy')(data, params.orderBy()) :
-            data;
-            orderedData = params.filter() ?
-            $filter('filter')(orderedData, params.filter()) :
-            orderedData;
+            // 执行搜索
+            var searchedData = searchData();
+
+            var orderedData = params.sorting() ? $filter('orderBy')(searchedData, params.orderBy()) : searchedData;
+            orderedData = params.filter() ? $filter('filter')(orderedData, params.filter()) : orderedData;
 
             params.total(orderedData.length); // set total for recalc pagination
             $defer.resolve($scope.users = orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count()));
         }
     });
+
+    $scope.$watch("searchDormitory", function () {
+        vm.tableParams.reload();
+    });
+
+    var searchData = function(){
+        var filterData = data;
+        if($scope.searchDormitory) {
+            var keywords = $scope.searchDormitory.split(" ");
+            var i;
+            for(i in keywords) {
+                filterData = $filter('filter')(filterData,keywords[i]);
+            }
+        }
+        return filterData;
+    }
 
     var inArray = Array.prototype.indexOf ?
     function (val, arr) {

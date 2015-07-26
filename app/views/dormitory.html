@@ -9,13 +9,16 @@
       </ol>
    </small>
 </h3>
-<div ng-controller="DormitoryController as table" class="container-fluid">
-   <div class="panel panel-default">
+<tabset>
+   <tab heading="地理视图" ng-controller="DormitoryMapController">
+      <div dormitory-map="" height="600" scale="0" map-name="world_mill_en"></div>
+   </tab>
+   <tab heading="列表视图" ng-controller="DormitoryController as table">
       <div class="panel-heading">
          <form class="pull-right hidden-xs form-inline">
             <button type="button" class="btn btn-danger btn-sm">批量删除</button>
             <button ng-click="table.tableParams.sorting({})" class="btn btn-primary btn-sm">排序复位</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            <input type="text" ,="," placeholder="表格搜索..." class="form-control input-sm form-horizontal" />
+            <input type="text" ng-model="searchDormitory" placeholder="表格搜索..." class="form-control input-sm form-horizontal" />
          </form>
          <div class="panel-title">宿舍列表</div>
       </div>
@@ -46,9 +49,9 @@
       <script type="text/ng-template" id="ng-table/headers/checkbox.html">
          <div class="checkbox c-checkbox"><label><input type="checkbox" ng-model="checkboxes.checked" id="select_all" name="filter-checkbox" value=""/><span class="fa fa-check"></span></label></div>
       </script>
-   </div>
+   </tab>
    <!-- 修改信息的弹窗-->
    <script type="text/ng-template" id="modifyDialog">
       <div><legend><h3 class="mt0">修改宿舍信息</h3></legend><form method="get" action="/" class="form-horizontal"><div class="form-group"><label for="input-id" class="col-sm-2 control-label">ID</label><div class="col-sm-10"><input id="input-id-1" type="text" disabled="disabled" ng-model="modifiyingUser.id" class="form-control"/></div></div><div class="form-group"><label for="input-name" class="col-sm-2 control-label">姓名</label><div class="col-sm-10"><input id="input-id-1" type="text" ng-maxlength="16" ng-model="modifiyingUser.name" class="form-control"/></div></div><div class="form-group"><label for="input-age" class="col-sm-2 control-label">年龄</label><div class="col-sm-10"><input id="input-id-1" type="text" ng-pattern="/^[0-9]+$/" ng-model="modifiyingUser.age" class="form-control"/></div></div><div class="form-group"><label for="input-money" class="col-sm-2 control-label">费用</label><div class="col-sm-10"><input id="input-id-1" type="number" ng-model="modifiyingUser.money" class="form-control"/></div></div></form><div class="row"><div class="container-fluid"><span class="pull-right"><button type="button" ng-click="cancel()" class="btn btn-default mr">取消</button><button type="button" ng-click="submitModify()" class="btn btn-warning">修改</button></span></div></div></div>
    </script>
-</div>
+</tabset>

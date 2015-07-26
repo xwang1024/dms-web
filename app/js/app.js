@@ -57,21 +57,14 @@ App.run(["$rootScope", "$state", "$stateParams",  '$window', '$templateCache', f
 
 }]);
 
-/**=========================================================
- * Module: config.js
- * App routes and resources configuration
- =========================================================*/
-
 App.config(['$stateProvider', '$locationProvider', '$urlRouterProvider', 'RouteHelpersProvider',
 function ($stateProvider, $locationProvider, $urlRouterProvider, helper) {
   'use strict';
 
-  // Set the following to true to enable the HTML5 Mode
-  // You may have to set <base> tag in index and a routing configuration in your server
   $locationProvider.html5Mode(false);
 
   // 默认路径
-  $urlRouterProvider.otherwise('/app/dormitoryMap');
+  $urlRouterProvider.otherwise('/app/dormitory');
 
   // 路由表（包括地址、继承关系、模板的url、controller、需要引用的模块、stateParams）  
   $stateProvider
@@ -83,28 +76,57 @@ function ($stateProvider, $locationProvider, $urlRouterProvider, helper) {
         controller: 'AppController',
         resolve: helper.resolveFor('fastclick', 'modernizr', 'icons', 'screenfull', 'animo', 'sparklines', 'slimscroll', 'classyloader', 'toaster', 'whirl')
     })
-    // 通知中心
-    .state('app.notification', {
-        url: '/notification',
-        title: '通知中心',
-        templateUrl: helper.basepath('notification.html'),
-        controller: 'NotificationController',
-        resolve: helper.resolveFor('vector-map', 'vector-map-maps')
-    })
     // 宿舍管理
     .state('app.dormitory', {
         url: '/dormitory',
         title: '宿舍管理',
         templateUrl: helper.basepath('dormitory.html'),
         controller: 'DormitoryController',
-        resolve: helper.resolveFor('ngTable', 'ngTableExport','ngDialog','vector-map', 'vector-map-maps')
+        resolve: helper.resolveFor('ngTable', 'ngDialog','vector-map', 'vector-map-maps')
     })
-    .state('app.dormitoryList', {
-        url: '/dormitoryList',
-        title: '宿舍信息列表',
-        templateUrl: helper.basepath('dormitory-list.html'),
-        resolve: helper.resolveFor('ngTable', 'ngTableExport')
+    // 员工管理
+    .state('app.employee', {
+        url: '/employee',
+        title: '员工管理',
+        templateUrl: helper.basepath('employee.html'),
+        controller: 'EmployeeController',
+        resolve: helper.resolveFor('ngTable', 'ngDialog')
     })
+    // 账号管理
+    .state('app.account', {
+        url: '/account',
+        title: '账号管理',
+        templateUrl: helper.basepath('account.html'),
+        controller: 'AccountController',
+        resolve: helper.resolveFor('ngTable', 'ngDialog')
+    })
+    // 住宿费管理
+    .state('app.accommodationFee', {
+        url: '/accommodationFee',
+        title: '住宿费管理',
+        templateUrl: helper.basepath('accommodationFee.html'),
+        controller: 'AccommodationFeeController',
+        resolve: helper.resolveFor('ngTable', 'ngDialog')
+    })
+    // 宿舍申请审核
+    .state('app.dormitoryApply', {
+        url: '/dormitoryApply',
+        title: '宿舍申请审核',
+        templateUrl: helper.basepath('dormitoryApply.html'),
+        controller: 'DormitoryApplyController',
+        resolve: helper.resolveFor('ngTable', 'ngDialog')
+    })
+    // 维修申请审核
+    .state('app.maintenanceApply', {
+        url: '/maintenanceApply',
+        title: '维修申请审核',
+        templateUrl: helper.basepath('maintenanceApply.html'),
+        controller: 'MaintenanceApplyController',
+        resolve: helper.resolveFor('ngTable', 'ngDialog')
+    })
+
+
+
     .state('app.dashboard', {
         url: '/dashboard',
         title: 'Dashboard',
@@ -974,17 +996,32 @@ App.controller('DormitoryController', [
     }, {
         total: data.length, // length of data
         getData: function($defer, params) {
-            var orderedData = params.sorting() ?
-            $filter('orderBy')(data, params.orderBy()) :
-            data;
-            orderedData = params.filter() ?
-            $filter('filter')(orderedData, params.filter()) :
-            orderedData;
+            // 执行搜索
+            var searchedData = searchData();
+
+            var orderedData = params.sorting() ? $filter('orderBy')(searchedData, params.orderBy()) : searchedData;
+            orderedData = params.filter() ? $filter('filter')(orderedData, params.filter()) : orderedData;
 
             params.total(orderedData.length); // set total for recalc pagination
             $defer.resolve($scope.users = orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count()));
         }
     });
+
+    $scope.$watch("searchDormitory", function () {
+        vm.tableParams.reload();
+    });
+
+    var searchData = function(){
+        var filterData = data;
+        if($scope.searchDormitory) {
+            var keywords = $scope.searchDormitory.split(" ");
+            var i;
+            for(i in keywords) {
+                filterData = $filter('filter')(filterData,keywords[i]);
+            }
+        }
+        return filterData;
+    }
 
     var inArray = Array.prototype.indexOf ?
     function (val, arr) {
@@ -1062,6 +1099,12 @@ App.controller('DormitoryModifyController', [
     ngDialog.close();
   }
 }]);
+
+App.controller('DormitoryMapController', ['$scope', function($scope) {
+  'use strict';
+
+}]);
+
 App.controller('NotificationController', ['$scope', '$http', '$state', function($scope, $http, $state) {
 
 }]);
@@ -5637,6 +5680,40 @@ App.directive('resetKey',  ['$state','$rootScope', function($state, $rootScope) 
   };
 
 }]);
+App.directive('dormitoryMap', ['vectorMap','$timeout', function(vectorMap, $timeout){
+  'use strict';
+
+  var defaultColors = {
+      markerColor:  '#23b7e5',      // the marker points
+      bgColor:      'transparent',      // the background
+      scaleColors:  ['#878c9a'],    // the color of the region in the serie
+      regionFill:   '#bbbec6'       // the base region color
+  };
+
+  return {
+    restrict: 'EA',
+    link: function(scope, element, attrs) {
+
+      var mapHeight   = attrs.height || '300',
+          options     = {
+            markerColor:  attrs.markerColor  || defaultColors.markerColor,
+            bgColor:      attrs.bgColor      || defaultColors.bgColor,
+            scale:        attrs.scale        || 1,
+            scaleColors:  attrs.scaleColors  || defaultColors.scaleColors,
+            regionFill:   attrs.regionFill   || defaultColors.regionFill,
+            mapName:      attrs.mapName      || 'world_mill_en'
+          };
+      
+      element.css('height', mapHeight);
+      
+      vectorMap.init(element , options, scope.seriesData, scope.markersData);
+      $timeout(function() {
+        element.resize();
+    }, 0)
+    }
+  };
+
+}]);
 /**=========================================================
  * Module: filestyle.js
  * Initializes the fielstyle plugin
@@ -6929,7 +7006,7 @@ App.directive('validateForm', function() {
  * Init jQuery Vector Map plugin
  =========================================================*/
 
-App.directive('vectorMap', ['vectorMap', function(vectorMap){
+App.directive('vectorMapss', ['vectorMap', function(vectorMap){
   'use strict';
 
   var defaultColors = {
@@ -6956,7 +7033,6 @@ App.directive('vectorMap', ['vectorMap', function(vectorMap){
       element.css('height', mapHeight);
       
       vectorMap.init( element , options, scope.seriesData, scope.markersData);
-
     }
   };
 

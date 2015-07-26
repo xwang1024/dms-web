@@ -24,7 +24,7 @@ nav.navbar.topnavbar(role='navigation')
 
       // START Right Navbar
       ul.nav.navbar-nav.navbar-right
-
+        
         // START User menu
         li.dropdown.dropdown-list(dropdown="")
           a(dropdown-toggle="")
@@ -39,6 +39,36 @@ nav.navbar.topnavbar(role='navigation')
                   small 修改密码
                 a.list-group-item(href='#')
                   small 注销
+              // END list group
+          // END Dropdown menu
+        // END User menu
+        
+        // START Alert menu
+        li.dropdown.dropdown-list(dropdown="")
+          a(dropdown-toggle="")
+            em.icon-bell
+            .label.label-danger 2
+          // START Dropdown menu
+          ul.dropdown-menu(class="animated flipInY")
+            li
+              // START list group
+              .list-group
+                // list item
+                a.list-group-item(href='#')
+                  .media-box
+                    .pull-left
+                      em.fa.fa-comment.fa-2x.text-info
+                    .media-box-body.clearfix
+                        p.m0 未处理的入住申请
+                        p.m0.text-muted: small 共2项
+                // list item
+                a.list-group-item(href='#')
+                  .media-box
+                    .pull-left
+                      em.fa.fa-wrench.fa-2x.text-warning
+                    .media-box-body.clearfix
+                        p.m0 未处理的维修申请
+                        p.m0.text-muted: small 共1项
               // END list group
           // END Dropdown menu
         // END Alert menu

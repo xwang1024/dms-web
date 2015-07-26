@@ -6,16 +6,17 @@ h3 宿舍管理
       li
         a(href='#') 小粉桥平房
       li.active 1层
-
-.container-fluid(ng-controller="DormitoryController as table")
-  .panel.panel-default
+tabset
+  tab(heading='地理视图', ng-controller="DormitoryMapController")
+    div(dormitory-map="", height='600', scale=0, map-name="world_mill_en")
+  tab(heading='列表视图', ng-controller="DormitoryController as table")
     .panel-heading
       form.pull-right.hidden-xs.form-inline
 
         button.btn.btn-danger.btn-sm(type='button') 批量删除
         button.btn.btn-primary.btn-sm(ng-click='table.tableParams.sorting({})') 排序复位
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        input.form-control.input-sm.form-horizontal(type='text', , placeholder='表格搜索...')
+        input.form-control.input-sm.form-horizontal(type='text', ng-model="searchDormitory", placeholder='表格搜索...')
       .panel-title 宿舍列表
         
     //- ng-table指明了使用什么样的参数来创建表格，export-csv是插件ng-table-export的功能，仅能导出为csv
@@ -69,4 +70,4 @@ h3 宿舍管理
           span.pull-right
             button.btn.btn-default.mr(type='button', ng-click='cancel()') 取消
             button.btn.btn-warning(type='button', ng-click='submitModify()') 修改
-        
+          

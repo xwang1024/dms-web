@@ -4,18 +4,17 @@
     "heading": "true"
   },
   {
-    "text": "通知中心",
-    "sref": "app.notification",
-    "icon": "icon-bell"
-  },
-  {
     "text": "宿舍管理",
-    "sref": "app.dormitory",
-    "icon": "icon-home"
+    "sref": "#",
+    "icon": "icon-home",
+    "submenu": [
+      {"text": "宿舍信息", "sref": "app.dormitory"},
+      {"text": "员工入住信息", "sref": "app.accommodation"}
+    ]
   },
   {
     "text": "员工管理",
-    "sref": "app.employeeList",
+    "sref": "app.employee",
     "icon": "icon-users"
   },
   {
