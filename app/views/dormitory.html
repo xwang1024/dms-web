@@ -8,88 +8,92 @@
          <li class="active">1层</li>
       </ol>
    </small>
+   <small>查询 / 修改宿舍信息</small>
 </h3>
 <tabset>
    <tab heading="地理视图" ng-controller="DormitoryMapController">
       <div dormitory-map="" height="600" scale="0" map-name="world_mill_en"></div>
    </tab>
    <tab heading="列表视图" ng-controller="DormitoryController as table">
-      <div class="h4">宿舍列表
-         <form class="pull-right hidden-xs form-inline">
-            <!-- START box placeholder-->
-            <div dropdown="dropdown" class="btn-group">
-               <button dropdown-toggle="" class="btn btn-default">全部校区<b class="caret"></b>
-               </button>
-               <ul role="menu" class="dropdown-menu">
-                  <li><a href="#">鼓楼</a>
-                  </li>
-                  <li><a href="#">仙林</a>
-                  </li>
-               </ul>
-            </div>
-            <!-- END button group-->
-            <!-- START box placeholder-->
-            <div dropdown="dropdown" class="btn-group">
-               <button dropdown-toggle="" class="btn btn-default">全部楼幢<b class="caret"></b>
-               </button>
-               <ul role="menu" class="dropdown-menu">
-                  <li><a href="#">小粉桥平房</a>
-                  </li>
-                  <li><a href="#">陶园新村</a>
-                  </li>
-               </ul>
-            </div>
-            <!-- END button group-->
-            <!-- START box placeholder-->
-            <div dropdown="dropdown" class="btn-group">
-               <button dropdown-toggle="" class="btn btn-default">全部楼层<b class="caret"></b>
-               </button>
-               <ul role="menu" class="dropdown-menu">
-                  <li><a href="#">1层</a>
-                  </li>
-                  <li><a href="#">2层</a>
-                  </li>
-               </ul>
-            </div>
-            <!-- END button group-->
-            <input type="text" ng-model="searchDormitory" placeholder="表格搜索..." class="form-control input-sm form-horizontal" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            <button ng-click="table.tableParams.sorting({})" class="btn btn-default btn-sm">复位</button>
-         </form>
-      </div>
-      <table ng-table="table.tableParams" class="table">
-         <tbody>
-            <tr ng-repeat="user in $data">
-               <td width="40" header="'ng-table/headers/checkbox.html'">
-                  <div class="checkbox c-checkbox">
-                     <label>
-                        <input type="checkbox" ng-model="checkboxes.items[user.id]" />
-                        <span class="fa fa-check"></span>
-                     </label>
+      <div class="container-fluid">
+         <div class="panel panel-default">
+            <div class="panel-heading">
+               <form class="pull-right hidden-xs form-inline">
+                  <!-- START box placeholder-->
+                  <div dropdown="dropdown" class="btn-group">
+                     <button dropdown-toggle="" class="btn btn-default btn-sm">全部校区<b class="caret"></b>
+                     </button>
+                     <ul role="menu" class="dropdown-menu">
+                        <li><a href="#">鼓楼</a>
+                        </li>
+                        <li><a href="#">仙林</a>
+                        </li>
+                     </ul>
                   </div>
-               </td>
-               <td data-title="'详细地址'" sortable="'campus'">鼓楼 - 小粉桥平房 - 1层 - 101</td>
-               <td data-title="'类型'" sortable="'type'" width="100" class="text-center">集体宿舍 - 男</td>
-               <td data-title="'核定'" sortable="'capacityCnt'" width="70" class="text-center">3</td>
-               <td data-title="'实际'" sortable="'occupiedCnt'" width="70" class="text-center">2</td>
-               <td data-title="'住户'">
-                  <div class="btn btn-primary btn-xs">王大锤</div>
-                  <div class="btn btn-primary btn-xs">王二锤</div>
-                  <div class="btn btn-primary btn-xs">王三锤</div>
-                  <div class="btn btn-primary btn-xs">王四锤</div>
-               </td>
-               <td data-title="'操作'" width="80" class="text-center">
-                  <button title="编辑" data-ng-click="modify(user)" class="btn btn-warning btn-xs"><i class="fa fa-pencil"></i>
-                  </button>
-                  <button title="详情" data-ng-click="info(user)" class="btn btn-success btn-xs"><i class="fa fa-ellipsis-h"></i>
-                  </button>
-               </td>
-            </tr>
-         </tbody>
-      </table>
-      <!-- 自定义表头checkbox的template-->
-      <script type="text/ng-template" id="ng-table/headers/checkbox.html">
-         <div class="checkbox c-checkbox"><label><input type="checkbox" ng-model="checkboxes.checked" id="select_all" name="filter-checkbox" value=""/><span class="fa fa-check"></span></label></div>
-      </script>
+                  <!-- END button group-->
+                  <!-- START box placeholder-->
+                  <div dropdown="dropdown" class="btn-group">
+                     <button dropdown-toggle="" class="btn btn-default btn-sm">全部楼幢<b class="caret"></b>
+                     </button>
+                     <ul role="menu" class="dropdown-menu">
+                        <li><a href="#">小粉桥平房</a>
+                        </li>
+                        <li><a href="#">陶园新村</a>
+                        </li>
+                     </ul>
+                  </div>
+                  <!-- END button group-->
+                  <!-- START box placeholder-->
+                  <div dropdown="dropdown" class="btn-group">
+                     <button dropdown-toggle="" class="btn btn-default btn-sm">全部楼层<b class="caret"></b>
+                     </button>
+                     <ul role="menu" class="dropdown-menu">
+                        <li><a href="#">1层</a>
+                        </li>
+                        <li><a href="#">2层</a>
+                        </li>
+                     </ul>
+                  </div>
+                  <!-- END button group-->
+                  <input type="text" ng-model="searchDormitory" placeholder="表格搜索..." class="form-control input-sm form-horizontal" />
+                  <button ng-click="table.tableParams.sorting({})" class="btn btn-default btn-sm">复位</button>
+               </form>
+               <div class="panel-title">宿舍列表</div>
+            </div>
+            <table ng-table="table.tableParams" class="table">
+               <tbody>
+                  <tr ng-repeat="user in $data">
+                     <td width="40" header="'ng-table/headers/checkbox.html'">
+                        <div class="checkbox c-checkbox">
+                           <label>
+                              <input type="checkbox" ng-model="checkboxes.items[user.id]" />
+                              <span class="fa fa-check"></span>
+                           </label>
+                        </div>
+                     </td>
+                     <td data-title="'详细地址'" sortable="'addressDetail'">鼓楼 - 小粉桥平房 - 1层 - 101</td>
+                     <td data-title="'类型'" sortable="'type'" width="100" class="text-center">集体宿舍 - 男</td>
+                     <td data-title="'核定'" sortable="'capacityCnt'" width="70" class="text-center">3</td>
+                     <td data-title="'实际'" sortable="'occupiedCnt'" width="70" class="text-center">2</td>
+                     <td data-title="'住户'">
+                        <div class="btn btn-primary btn-xs">王大锤</div>
+                        <div class="btn btn-primary btn-xs">王二锤</div>
+                        <div class="btn btn-primary btn-xs">王三锤</div>
+                        <div class="btn btn-primary btn-xs">王四锤</div>
+                     </td>
+                     <td data-title="'操作'" width="80" class="text-center">
+                        <button title="编辑" data-ng-click="modify(user)" class="btn btn-warning btn-xs"><i class="fa fa-pencil"></i>
+                        </button>
+                     </td>
+                  </tr>
+               </tbody>
+            </table>
+            <!-- 自定义表头checkbox的template-->
+            <script type="text/ng-template" id="ng-table/headers/checkbox.html">
+               <div class="checkbox c-checkbox"><label><input type="checkbox" ng-model="checkboxes.checked" id="select_all" name="filter-checkbox" value=""/><span class="fa fa-check"></span></label></div>
+            </script>
+         </div>
+      </div>
    </tab>
    <!-- 修改信息的弹窗-->
    <script type="text/ng-template" id="modifyDialog">

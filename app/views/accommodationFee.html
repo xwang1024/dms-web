@@ -1,1 +1,92 @@
-<h3>住宿费审核</h3>
+<h3>住宿费审核
+   <small>选择月份和中心，查询或审核当月该中心各员工的住宿费</small>
+</h3>
+<div ng-controller="AccommodationFeeController as table" class="container-fluid">
+   <div class="panel panel-default">
+      <div class="panel-heading">
+         <form class="pull-right hidden-xs form-inline">
+            <div dropdown="dropdown" class="btn-group">
+               <button dropdown-toggle="" class="btn btn-default btn-sm">2015年<b class="caret"></b>
+               </button>
+               <ul role="menu" class="dropdown-menu">
+                  <li><a href="#">2014年</a>
+                  </li>
+                  <li><a href="#">2013年</a>
+                  </li>
+               </ul>
+            </div>
+            <!-- END button group-->
+            <!-- START box placeholder-->
+            <div dropdown="dropdown" class="btn-group">
+               <button dropdown-toggle="" class="btn btn-default btn-sm">7月<b class="caret"></b>
+               </button>
+               <ul role="menu" class="dropdown-menu">
+                  <li><a href="#">6月</a>
+                  </li>
+                  <li><a href="#">5月</a>
+                  </li>
+                  <li><a href="#">4月</a>
+                  </li>
+                  <li><a href="#">3月</a>
+                  </li>
+               </ul>
+            </div>
+            <!-- END button group-->
+            <!-- START box placeholder-->
+            <div dropdown="dropdown" class="btn-group">
+               <button dropdown-toggle="" class="btn btn-default btn-sm">动力中心<b class="caret"></b>
+               </button>
+               <ul role="menu" class="dropdown-menu">
+                  <li><a href="#">幼儿园</a>
+                  </li>
+                  <li><a href="#">膳食中心</a>
+                  </li>
+               </ul>
+            </div>
+            <!-- END button group-->
+            <input type="text" ng-model="searchDormitory" placeholder="表格搜索..." class="form-control input-sm form-horizontal" />
+            <button ng-click="table.tableParams.sorting({})" class="btn btn-default btn-sm">全部复位</button>
+         </form>
+         <div class="panel-title">入住信息列表</div>
+      </div>
+      <table ng-table="table.tableParams" class="table">
+         <tbody>
+            <tr ng-repeat="user in $data">
+               <td width="40" header="'ng-table/headers/checkbox.html'">
+                  <div class="checkbox c-checkbox">
+                     <label>
+                        <input type="checkbox" ng-model="checkboxes.items[user.id]" />
+                        <span class="fa fa-check"></span>
+                     </label>
+                  </div>
+               </td>
+               <td data-title="'员工'" sortable="'employee.name'" width="100" class="text-center">
+                  <div class="btn btn-primary btn-xs">王大锤</div>
+               </td>
+               <td data-title="'宿舍地址'" sortable="'address'">鼓楼 - 小粉桥平房 - 1层 - 101</td>
+               <td data-title="'宿舍类型'" sortable="'type'" width="100" class="text-center">集体宿舍 - 男</td>
+               <td data-title="'核定'" sortable="'type'" width="70" class="text-center">3</td>
+               <td data-title="'实际'" sortable="'type'" width="70" class="text-center">3</td>
+               <td data-title="'所属中心'" sortable="'department'" width="100" class="text-center">膳食中心</td>
+               <td data-title="'缴纳月份'" sortable="'departmentFee'" width="100" class="text-center">2015-07</td>
+               <td data-title="'中心缴纳'" sortable="'departmentFee'" width="70" class="text-center">100.00</td>
+               <td data-title="'个人缴纳'" sortable="'employeeFee'" width="70" class="text-center">100.00</td>
+               <td data-title="'审核'" width="90" class="text-center">
+                  <button title="通过" data-ng-click="modify(user)" style="width:25px" class="btn btn-success btn-xs"><i class="fa fa-check"></i>
+                  </button>
+                  <button title="驳回" data-ng-click="modify(user)" style="width:24px" class="btn btn-danger btn-xs"><i class="fa fa-times"></i>
+                  </button>
+               </td>
+            </tr>
+         </tbody>
+      </table>
+      <!-- 自定义表头checkbox的template-->
+      <script type="text/ng-template" id="ng-table/headers/checkbox.html">
+         <div class="checkbox c-checkbox"><label><input type="checkbox" ng-model="checkboxes.checked" id="select_all" name="filter-checkbox" value=""/><span class="fa fa-check"></span></label></div>
+      </script>
+   </div>
+   <!-- 修改信息的弹窗-->
+   <script type="text/ng-template" id="modifyDialog">
+      <div><legend><h3 class="mt0">修改宿舍信息</h3></legend><form method="get" action="/" class="form-horizontal"><div class="form-group"><label for="input-name" class="col-sm-2 control-label">地址</label><div class="col-sm-10"><input id="input-id-1" type="text" disabled="disabled" ng-model="modifiyingUser.name" class="form-control"/></div></div><div class="form-group"><label for="input-age" class="col-sm-2 control-label">宿舍号</label><div class="col-sm-10"><input id="input-id-1" type="text" ng-pattern="/^[0-9]+$/" ng-model="modifiyingUser.age" class="form-control"/></div></div><div class="form-group"><label for="input-age" class="col-sm-2 control-label">类型</label><div class="col-sm-10"><input id="input-id-1" type="text" ng-pattern="/^[0-9]+$/" ng-model="modifiyingUser.age" class="form-control"/></div></div><div class="form-group"><label for="input-money" class="col-sm-2 control-label">核定</label><div class="col-sm-10"><input id="input-id-1" type="number" ng-model="modifiyingUser.money" class="form-control"/></div></div><div class="form-group"><label for="input-money" class="col-sm-2 control-label">实际</label><div class="col-sm-10"><input id="input-id-1" type="number" ng-model="modifiyingUser.money" class="form-control"/></div></div></form><div class="row"><div class="container-fluid"><span class="pull-right"><button type="button" ng-click="cancel()" class="btn btn-default mr">取消</button><button type="button" ng-click="submitModify()" class="btn btn-warning">修改</button></span></div></div></div>
+   </script>
+</div>

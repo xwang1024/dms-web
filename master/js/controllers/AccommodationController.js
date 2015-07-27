@@ -1,6 +1,7 @@
-App.controller('EmployeeController', [
+App.controller('AccommodationController', [
     '$scope', '$http', '$state','$filter','ngTableParams','$resource', '$timeout', 'ngTableDataService', 'ngDialog', 'ShareService',
     function($scope, $http, $state, $filter, ngTableParams, $resource, $timeout, ngTableDataService, ngDialog, ShareService) {
+
     'use strict';
     var vm = this;
     var data = [{id: 1, name: "Moroni", age: 50, money: -10},

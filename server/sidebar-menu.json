@@ -23,11 +23,6 @@
     "icon": "icon-users"
   },
   {
-    "text": "账号管理",
-    "sref": "app.account",
-    "icon": "icon-settings"
-  },
-  {
     "text": "住宿费审核",
     "sref": "app.accommodationFee",
     "icon": "icon-wallet"
@@ -45,8 +40,9 @@
   {
     "text": "管理员功能",
     "sref": "#",
-    "icon": "icon-user",
+    "icon": "icon-settings",
     "submenu": [
+      {"text": "系统账号管理", "sref": "app.account"},
       {"text": "宿舍信息导入", "sref": "app.importDormitory"},
       {"text": "员工信息导入", "sref": "app.importEmployee"}
     ]

@@ -1,1 +1,98 @@
 h3 员工信息
+  small 查询 / 修改员工信息
+.container-fluid(ng-controller="EmployeeController as table")
+  .panel.panel-default
+    .panel-heading
+      form.pull-right.hidden-xs.form-inline
+        .btn-group(dropdown='dropdown')
+          button.btn.btn-default.btn-sm(dropdown-toggle="") 全部校区
+            b.caret
+          ul.dropdown-menu(role='menu')
+            li
+              a(href='#') 鼓楼
+            li
+              a(href='#') 仙林
+        // END button group
+        // START box placeholder
+        .btn-group(dropdown='dropdown')
+          button.btn.btn-default.btn-sm(dropdown-toggle="") 全部中心
+            b.caret
+          ul.dropdown-menu(role='menu')
+            li
+              a(href='#') 动力
+            li
+              a(href='#') 幼儿园
+        // END button group
+        // START box placeholder
+        .btn-group(dropdown='dropdown')
+          button.btn.btn-default.btn-sm(dropdown-toggle="") 全部性别
+            b.caret
+          ul.dropdown-menu(role='menu')
+            li
+              a(href='#') 男
+            li
+              a(href='#') 女
+        // END button group
+        
+        input.form-control.input-sm.form-horizontal(type='text', ng-model="searchDormitory", placeholder='表格搜索...')
+        button.btn.btn-default.btn-sm(ng-click='table.tableParams.sorting({})') 全部复位
+      .panel-title 员工信息列表
+    
+
+    //- ng-table指明了使用什么样的参数来创建表格
+    table.table(ng-table='table.tableParams')
+      tbody
+        tr(ng-repeat='user in $data')
+          td(width="40", header="'ng-table/headers/checkbox.html'")
+            .checkbox.c-checkbox
+              label
+                input(type='checkbox', ng-model="checkboxes.items[user.id]")
+                span.fa.fa-check
+          td(data-title="'姓名'", sortable="'campus'") 王大锤
+          td.text-center(data-title="'性别'", sortable="'gender'", width="70") 男
+          td.text-center(data-title="'身份证'", sortable="'idNum'", width="200") 622000000000000000
+          td.text-center(data-title="'出生年月'", sortable="'birthMonth'", width="100") 0000-00
+          td.text-center(data-title="'所属中心'", sortable="'department'", width="100") 动力
+          td.text-center(data-title="'工作地址'", sortable="'workAddress'") 鼓楼 - 南苑餐厅
+          td.text-center(data-title="'宿舍地址'", sortable="'dormitoryAddress'") 鼓楼 - 小粉桥平房 - 1层 - 101
+          td.text-center(data-title="'操作'", width="80")
+            button.btn.btn-warning.btn-xs(title='修改', data-ng-click='modify(user)')
+                           i.fa.fa-pencil
+    // 自定义表头checkbox的template
+    script(type="text/ng-template", id="ng-table/headers/checkbox.html")
+      .checkbox.c-checkbox
+        label
+          input(type="checkbox", ng-model="checkboxes.checked", id="select_all", name="filter-checkbox", value="")
+          span.fa.fa-check
+  
+  // 修改信息的弹窗
+  script(type="text/ng-template", id="modifyDialog")
+    div
+      legend
+        h3.mt0 修改宿舍信息
+      form.form-horizontal(method='get', action="/")
+        .form-group
+          label.col-sm-2.control-label(for='input-name') 地址
+          .col-sm-10
+            input#input-id-1.form-control(type='text', disabled, ng-model="modifiyingUser.name")
+        .form-group
+          label.col-sm-2.control-label(for='input-age') 宿舍号
+          .col-sm-10
+            input#input-id-1.form-control(type='text', ng-pattern="/^[0-9]+$/", ng-model="modifiyingUser.age")
+        .form-group
+          label.col-sm-2.control-label(for='input-age') 类型
+          .col-sm-10
+            input#input-id-1.form-control(type='text', ng-pattern="/^[0-9]+$/", ng-model="modifiyingUser.age")
+        .form-group
+          label.col-sm-2.control-label(for='input-money') 核定
+          .col-sm-10
+            input#input-id-1.form-control(type='number', ng-model="modifiyingUser.money")
+        .form-group
+          label.col-sm-2.control-label(for='input-money') 实际
+          .col-sm-10
+            input#input-id-1.form-control(type='number', ng-model="modifiyingUser.money")
+      .row
+        .container-fluid
+          span.pull-right
+            button.btn.btn-default.mr(type='button', ng-click='cancel()') 取消
+            button.btn.btn-warning(type='button', ng-click='submitModify()') 修改

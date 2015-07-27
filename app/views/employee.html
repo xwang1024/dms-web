@@ -1,1 +1,82 @@
-<h3>员工信息</h3>
+<h3>员工信息
+   <small>查询 / 修改员工信息</small>
+</h3>
+<div ng-controller="EmployeeController as table" class="container-fluid">
+   <div class="panel panel-default">
+      <div class="panel-heading">
+         <form class="pull-right hidden-xs form-inline">
+            <div dropdown="dropdown" class="btn-group">
+               <button dropdown-toggle="" class="btn btn-default btn-sm">全部校区<b class="caret"></b>
+               </button>
+               <ul role="menu" class="dropdown-menu">
+                  <li><a href="#">鼓楼</a>
+                  </li>
+                  <li><a href="#">仙林</a>
+                  </li>
+               </ul>
+            </div>
+            <!-- END button group-->
+            <!-- START box placeholder-->
+            <div dropdown="dropdown" class="btn-group">
+               <button dropdown-toggle="" class="btn btn-default btn-sm">全部中心<b class="caret"></b>
+               </button>
+               <ul role="menu" class="dropdown-menu">
+                  <li><a href="#">动力</a>
+                  </li>
+                  <li><a href="#">幼儿园</a>
+                  </li>
+               </ul>
+            </div>
+            <!-- END button group-->
+            <!-- START box placeholder-->
+            <div dropdown="dropdown" class="btn-group">
+               <button dropdown-toggle="" class="btn btn-default btn-sm">全部性别<b class="caret"></b>
+               </button>
+               <ul role="menu" class="dropdown-menu">
+                  <li><a href="#">男</a>
+                  </li>
+                  <li><a href="#">女</a>
+                  </li>
+               </ul>
+            </div>
+            <!-- END button group-->
+            <input type="text" ng-model="searchDormitory" placeholder="表格搜索..." class="form-control input-sm form-horizontal" />
+            <button ng-click="table.tableParams.sorting({})" class="btn btn-default btn-sm">全部复位</button>
+         </form>
+         <div class="panel-title">员工信息列表</div>
+      </div>
+      <table ng-table="table.tableParams" class="table">
+         <tbody>
+            <tr ng-repeat="user in $data">
+               <td width="40" header="'ng-table/headers/checkbox.html'">
+                  <div class="checkbox c-checkbox">
+                     <label>
+                        <input type="checkbox" ng-model="checkboxes.items[user.id]" />
+                        <span class="fa fa-check"></span>
+                     </label>
+                  </div>
+               </td>
+               <td data-title="'姓名'" sortable="'campus'">王大锤</td>
+               <td data-title="'性别'" sortable="'gender'" width="70" class="text-center">男</td>
+               <td data-title="'身份证'" sortable="'idNum'" width="200" class="text-center">622000000000000000</td>
+               <td data-title="'出生年月'" sortable="'birthMonth'" width="100" class="text-center">0000-00</td>
+               <td data-title="'所属中心'" sortable="'department'" width="100" class="text-center">动力</td>
+               <td data-title="'工作地址'" sortable="'workAddress'" class="text-center">鼓楼 - 南苑餐厅</td>
+               <td data-title="'宿舍地址'" sortable="'dormitoryAddress'" class="text-center">鼓楼 - 小粉桥平房 - 1层 - 101</td>
+               <td data-title="'操作'" width="80" class="text-center">
+                  <button title="修改" data-ng-click="modify(user)" class="btn btn-warning btn-xs"><i class="fa fa-pencil"></i>
+                  </button>
+               </td>
+            </tr>
+         </tbody>
+      </table>
+      <!-- 自定义表头checkbox的template-->
+      <script type="text/ng-template" id="ng-table/headers/checkbox.html">
+         <div class="checkbox c-checkbox"><label><input type="checkbox" ng-model="checkboxes.checked" id="select_all" name="filter-checkbox" value=""/><span class="fa fa-check"></span></label></div>
+      </script>
+   </div>
+   <!-- 修改信息的弹窗-->
+   <script type="text/ng-template" id="modifyDialog">
+      <div><legend><h3 class="mt0">修改宿舍信息</h3></legend><form method="get" action="/" class="form-horizontal"><div class="form-group"><label for="input-name" class="col-sm-2 control-label">地址</label><div class="col-sm-10"><input id="input-id-1" type="text" disabled="disabled" ng-model="modifiyingUser.name" class="form-control"/></div></div><div class="form-group"><label for="input-age" class="col-sm-2 control-label">宿舍号</label><div class="col-sm-10"><input id="input-id-1" type="text" ng-pattern="/^[0-9]+$/" ng-model="modifiyingUser.age" class="form-control"/></div></div><div class="form-group"><label for="input-age" class="col-sm-2 control-label">类型</label><div class="col-sm-10"><input id="input-id-1" type="text" ng-pattern="/^[0-9]+$/" ng-model="modifiyingUser.age" class="form-control"/></div></div><div class="form-group"><label for="input-money" class="col-sm-2 control-label">核定</label><div class="col-sm-10"><input id="input-id-1" type="number" ng-model="modifiyingUser.money" class="form-control"/></div></div><div class="form-group"><label for="input-money" class="col-sm-2 control-label">实际</label><div class="col-sm-10"><input id="input-id-1" type="number" ng-model="modifiyingUser.money" class="form-control"/></div></div></form><div class="row"><div class="container-fluid"><span class="pull-right"><button type="button" ng-click="cancel()" class="btn btn-default mr">取消</button><button type="button" ng-click="submitModify()" class="btn btn-warning">修改</button></span></div></div></div>
+   </script>
+</div>

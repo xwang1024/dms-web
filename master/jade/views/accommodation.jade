@@ -1,1 +1,109 @@
 h3 入住信息
+  small 查询入住信息，以及住户迁出
+.container-fluid(ng-controller="AccommodationController as table")
+  .panel.panel-default
+    .panel-heading
+      form.pull-right.hidden-xs.form-inline
+        .btn-group(dropdown='dropdown')
+          button.btn.btn-default.btn-sm(dropdown-toggle="") 全部校区
+            b.caret
+          ul.dropdown-menu(role='menu')
+            li
+              a(href='#') 鼓楼
+            li
+              a(href='#') 仙林
+        // END button group
+        // START box placeholder
+        .btn-group(dropdown='dropdown')
+          button.btn.btn-default.btn-sm(dropdown-toggle="") 全部楼幢
+            b.caret
+          ul.dropdown-menu(role='menu')
+            li
+              a(href='#') 小粉桥平房
+            li
+              a(href='#') 陶园新村
+        // END button group
+        // START box placeholder
+        .btn-group(dropdown='dropdown')
+          button.btn.btn-default.btn-sm(dropdown-toggle="") 全部楼层
+            b.caret
+          ul.dropdown-menu(role='menu')
+            li
+              a(href='#') 1层
+            li
+              a(href='#') 2层
+        // END button group
+        // START box placeholder
+        .btn-group(dropdown='dropdown')
+          button.btn.btn-default.btn-sm(dropdown-toggle="") 宿舍类型
+            b.caret
+          ul.dropdown-menu(role='menu')
+            li
+              a(href='#') 集体宿舍 - 男
+            li
+              a(href='#') 集体宿舍 - 女
+            li
+              a(href='#') 夫妻房
+        // END button group
+        input.form-control.input-sm.form-horizontal(type='text', ng-model="searchDormitory", placeholder='表格搜索...')
+        button.btn.btn-default.btn-sm(ng-click='table.tableParams.sorting({})') 全部复位
+      .panel-title 入住信息列表
+    
+
+    //- ng-table指明了使用什么样的参数来创建表格
+    table.table(ng-table='table.tableParams')
+      tbody
+        tr(ng-repeat='user in $data')
+          td(width="40", header="'ng-table/headers/checkbox.html'")
+            .checkbox.c-checkbox
+              label
+                input(type='checkbox', ng-model="checkboxes.items[user.id]")
+                span.fa.fa-check
+          td(data-title="'宿舍地址'", sortable="'addressDetail'") 鼓楼 - 小粉桥平房 - 1层 - 101
+          td.text-center(data-title="'类型'", sortable="'type'", width="100") 集体宿舍 - 男
+          td(data-title="'员工'")
+            .btn.btn-primary.btn-xs 王大锤
+          td.text-center(data-title="'迁入时间'", sortable="'checkInDate'", width="100") 2012-01-01
+          td.text-center(data-title="'迁出时间'", sortable="'checkOutDate'", width="100") /
+          td.text-center(data-title="'状态'", sortable="'status'", width="70") 在住
+          td.text-center(data-title="'操作'", width="80")
+            button.btn.btn-danger.btn-xs(title='迁出', data-ng-click='modify(user)')
+                           i.fa.fa-sign-out
+    // 自定义表头checkbox的template
+    script(type="text/ng-template", id="ng-table/headers/checkbox.html")
+      .checkbox.c-checkbox
+        label
+          input(type="checkbox", ng-model="checkboxes.checked", id="select_all", name="filter-checkbox", value="")
+          span.fa.fa-check
+  
+  // 修改信息的弹窗
+  script(type="text/ng-template", id="modifyDialog")
+    div
+      legend
+        h3.mt0 修改宿舍信息
+      form.form-horizontal(method='get', action="/")
+        .form-group
+          label.col-sm-2.control-label(for='input-name') 地址
+          .col-sm-10
+            input#input-id-1.form-control(type='text', disabled, ng-model="modifiyingUser.name")
+        .form-group
+          label.col-sm-2.control-label(for='input-age') 宿舍号
+          .col-sm-10
+            input#input-id-1.form-control(type='text', ng-pattern="/^[0-9]+$/", ng-model="modifiyingUser.age")
+        .form-group
+          label.col-sm-2.control-label(for='input-age') 类型
+          .col-sm-10
+            input#input-id-1.form-control(type='text', ng-pattern="/^[0-9]+$/", ng-model="modifiyingUser.age")
+        .form-group
+          label.col-sm-2.control-label(for='input-money') 核定
+          .col-sm-10
+            input#input-id-1.form-control(type='number', ng-model="modifiyingUser.money")
+        .form-group
+          label.col-sm-2.control-label(for='input-money') 实际
+          .col-sm-10
+            input#input-id-1.form-control(type='number', ng-model="modifiyingUser.money")
+      .row
+        .container-fluid
+          span.pull-right
+            button.btn.btn-default.mr(type='button', ng-click='cancel()') 取消
+            button.btn.btn-warning(type='button', ng-click='submitModify()') 修改

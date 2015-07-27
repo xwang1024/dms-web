@@ -1,1 +1,106 @@
 h3 住宿费审核
+  small 选择月份和中心，查询或审核当月该中心各员工的住宿费
+.container-fluid(ng-controller="AccommodationFeeController as table")
+  .panel.panel-default
+    .panel-heading
+      form.pull-right.hidden-xs.form-inline
+        .btn-group(dropdown='dropdown')
+          button.btn.btn-default.btn-sm(dropdown-toggle="") 2015年
+            b.caret
+          ul.dropdown-menu(role='menu')
+            li
+              a(href='#') 2014年
+            li
+              a(href='#') 2013年
+        // END button group
+        // START box placeholder
+        .btn-group(dropdown='dropdown')
+          button.btn.btn-default.btn-sm(dropdown-toggle="") 7月
+            b.caret
+          ul.dropdown-menu(role='menu')
+            li
+              a(href='#') 6月
+            li
+              a(href='#') 5月
+            li
+              a(href='#') 4月
+            li
+              a(href='#') 3月
+        // END button group
+        // START box placeholder
+        .btn-group(dropdown='dropdown')
+          button.btn.btn-default.btn-sm(dropdown-toggle="") 动力中心
+            b.caret
+          ul.dropdown-menu(role='menu')
+            li
+              a(href='#') 幼儿园
+            li
+              a(href='#') 膳食中心
+        // END button group
+        input.form-control.input-sm.form-horizontal(type='text', ng-model="searchDormitory", placeholder='表格搜索...')
+        button.btn.btn-default.btn-sm(ng-click='table.tableParams.sorting({})') 全部复位
+      .panel-title 入住信息列表
+    
+
+    //- ng-table指明了使用什么样的参数来创建表格
+    table.table(ng-table='table.tableParams')
+      tbody
+        tr(ng-repeat='user in $data')
+          td(width="40", header="'ng-table/headers/checkbox.html'")
+            .checkbox.c-checkbox
+              label
+                input(type='checkbox', ng-model="checkboxes.items[user.id]")
+                span.fa.fa-check
+          td.text-center(data-title="'员工'", sortable="'employee.name'", width="100") 
+            .btn.btn-primary.btn-xs 王大锤
+          td(data-title="'宿舍地址'", sortable="'address'") 鼓楼 - 小粉桥平房 - 1层 - 101
+          td.text-center(data-title="'宿舍类型'", sortable="'type'", width="100") 集体宿舍 - 男
+          td.text-center(data-title="'核定'", sortable="'type'", width="70") 3
+          td.text-center(data-title="'实际'", sortable="'type'", width="70") 3
+          td.text-center(data-title="'所属中心'", sortable="'department'", width="100") 膳食中心
+          td.text-center(data-title="'缴纳月份'", sortable="'departmentFee'", width="100") 2015-07
+          td.text-center(data-title="'中心缴纳'", sortable="'departmentFee'", width="70") 100.00
+          td.text-center(data-title="'个人缴纳'", sortable="'employeeFee'", width="70") 100.00
+          td.text-center(data-title="'审核'", width="90")
+            button.btn.btn-success.btn-xs(title='通过', data-ng-click='modify(user)', style="width:25px")
+              i.fa.fa-check
+            button.btn.btn-danger.btn-xs(title='驳回', data-ng-click='modify(user)', style="width:24px")
+              i.fa.fa-times
+    // 自定义表头checkbox的template
+    script(type="text/ng-template", id="ng-table/headers/checkbox.html")
+      .checkbox.c-checkbox
+        label
+          input(type="checkbox", ng-model="checkboxes.checked", id="select_all", name="filter-checkbox", value="")
+          span.fa.fa-check
+  
+  // 修改信息的弹窗
+  script(type="text/ng-template", id="modifyDialog")
+    div
+      legend
+        h3.mt0 修改宿舍信息
+      form.form-horizontal(method='get', action="/")
+        .form-group
+          label.col-sm-2.control-label(for='input-name') 地址
+          .col-sm-10
+            input#input-id-1.form-control(type='text', disabled, ng-model="modifiyingUser.name")
+        .form-group
+          label.col-sm-2.control-label(for='input-age') 宿舍号
+          .col-sm-10
+            input#input-id-1.form-control(type='text', ng-pattern="/^[0-9]+$/", ng-model="modifiyingUser.age")
+        .form-group
+          label.col-sm-2.control-label(for='input-age') 类型
+          .col-sm-10
+            input#input-id-1.form-control(type='text', ng-pattern="/^[0-9]+$/", ng-model="modifiyingUser.age")
+        .form-group
+          label.col-sm-2.control-label(for='input-money') 核定
+          .col-sm-10
+            input#input-id-1.form-control(type='number', ng-model="modifiyingUser.money")
+        .form-group
+          label.col-sm-2.control-label(for='input-money') 实际
+          .col-sm-10
+            input#input-id-1.form-control(type='number', ng-model="modifiyingUser.money")
+      .row
+        .container-fluid
+          span.pull-right
+            button.btn.btn-default.mr(type='button', ng-click='cancel()') 取消
+            button.btn.btn-warning(type='button', ng-click='submitModify()') 修改
