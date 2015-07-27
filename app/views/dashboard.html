@@ -1,19 +1,5 @@
-<h3>
-   <!-- START Language list-->
-   <div class="pull-right">
-      <div dropdown="" is-open="language.listIsOpen" class="btn-group">
-         <button type="button" dropdown-toggle="" class="btn btn-default">{{language.selected}}
-            <span class="caret"></span>
-         </button>
-         <ul role="menu" class="dropdown-menu dropdown-menu-right animated fadeInUpShort">
-            <li ng-repeat="(localeId, langName) in language.available"><a ng-click="language.set(localeId, $event)" href="#">{{langName}}</a>
-            </li>
-         </ul>
-      </div>
-   </div>
-   <!-- END Language list    -->
-   Dashboard
-   <small>{{ 'dashboard.WELCOME' | translate:{ appName: app.name } }} !</small>
+<h3>个人中心
+   <small>欢迎使用南京大学后勤集团 - 宿舍管理系统 !</small>
 </h3>
 <!-- START widgets box-->
 <div class="row">
@@ -22,11 +8,11 @@
       <div class="panel widget bg-primary">
          <div class="row row-table">
             <div class="col-xs-4 text-center bg-primary-dark pv-lg">
-               <em class="icon-cloud-upload fa-3x"></em>
+               <em class="icon-home fa-3x"></em>
             </div>
             <div class="col-xs-8 pv-lg">
-               <div class="h2 mt0">1700</div>
-               <div class="text-uppercase">Uploads</div>
+               <div class="h2 mt0">358 / 901</div>
+               <div class="text-uppercase">已用 / 总床位数</div>
             </div>
          </div>
       </div>
@@ -36,50 +22,48 @@
       <div class="panel widget bg-purple">
          <div class="row row-table">
             <div class="col-xs-4 text-center bg-purple-dark pv-lg">
-               <em class="icon-globe fa-3x"></em>
+               <em class="icon-users fa-3x"></em>
             </div>
             <div class="col-xs-8 pv-lg">
-               <div class="h2 mt0">700
-                  <small>GB</small>
+               <div class="h2 mt0">150 / 150
+                  <small></small>
                </div>
-               <div class="text-uppercase">Quota</div>
+               <div class="text-uppercase">男 / 女员工数</div>
             </div>
          </div>
       </div>
    </div>
-   <div class="col-lg-3 col-md-6 col-sm-12">
+   <div class="col-lg-3 col-sm-6">
       <!-- START widget-->
       <div class="panel widget bg-green">
          <div class="row row-table">
             <div class="col-xs-4 text-center bg-green-dark pv-lg">
-               <em class="icon-bubbles fa-3x"></em>
+               <em class="icon-docs fa-3x"></em>
             </div>
             <div class="col-xs-8 pv-lg">
-               <div class="h2 mt0">500</div>
-               <div class="text-uppercase">Reviews</div>
+               <div class="h2 mt0">5
+                  <small>条</small>
+               </div>
+               <div class="text-uppercase">处理入住申请</div>
             </div>
          </div>
       </div>
    </div>
-   <div class="col-lg-3 col-md-6 col-sm-12">
-      <!-- START date widget-->
-      <div class="panel widget">
+   <div class="col-lg-3 col-sm-6">
+      <!-- START widget-->
+      <div class="panel widget bg-warning">
          <div class="row row-table">
-            <div class="col-xs-4 text-center bg-green pv-lg">
-               <!-- See formats: https://docs.angularjs.org/api/ng/filter/date-->
-               <now format="MMMM" class="text-sm"></now>
-               <br/>
-               <now format="d" class="h2 mt0"></now>
+            <div class="col-xs-4 text-center bg-warning-dark pv-lg">
+               <em class="icon-wrench fa-3x"></em>
             </div>
             <div class="col-xs-8 pv-lg">
-               <now format="EEEE" class="text-uppercase"></now>
-               <br/>
-               <now format="h:mm" class="h2 mt0"></now>
-               <now format="a" class="text-muted text-sm"></now>
+               <div class="h2 mt0">5
+                  <small>条</small>
+               </div>
+               <div class="text-uppercase">处理维修申请</div>
             </div>
          </div>
       </div>
-      <!-- END date widget    -->
    </div>
 </div>
 <!-- END widgets box-->

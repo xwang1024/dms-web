@@ -5,7 +5,7 @@ function ($stateProvider, $locationProvider, $urlRouterProvider, helper) {
   $locationProvider.html5Mode(false);
 
   // 默认路径
-  $urlRouterProvider.otherwise('/app/dormitory');
+  $urlRouterProvider.otherwise('/app/dashboard');
 
   // 路由表（包括地址、继承关系、模板的url、controller、需要引用的模块、stateParams）  
   $stateProvider
@@ -17,13 +17,21 @@ function ($stateProvider, $locationProvider, $urlRouterProvider, helper) {
         controller: 'AppController',
         resolve: helper.resolveFor('fastclick', 'modernizr', 'icons', 'screenfull', 'animo', 'sparklines', 'slimscroll', 'classyloader', 'toaster', 'whirl')
     })
-    // 宿舍管理
+    // 宿舍信息
     .state('app.dormitory', {
         url: '/dormitory',
         title: '宿舍管理',
         templateUrl: helper.basepath('dormitory.html'),
         controller: 'DormitoryController',
         resolve: helper.resolveFor('ngTable', 'ngDialog','vector-map', 'vector-map-maps')
+    })
+    // 入住信息
+    .state('app.accommodation', {
+        url: '/accommodation',
+        title: '宿舍管理',
+        templateUrl: helper.basepath('accommodation.html'),
+        controller: 'AccommodationController',
+        resolve: helper.resolveFor('ngTable', 'ngDialog')
     })
     // 员工管理
     .state('app.employee', {
@@ -63,6 +71,20 @@ function ($stateProvider, $locationProvider, $urlRouterProvider, helper) {
         title: '维修申请审核',
         templateUrl: helper.basepath('maintenanceApply.html'),
         controller: 'MaintenanceApplyController',
+        resolve: helper.resolveFor('ngTable', 'ngDialog')
+    })
+    .state('app.importDormitory', {
+        url: '/importDormitory',
+        title: '宿舍批量导入',
+        templateUrl: helper.basepath('importDormitory.html'),
+        controller: 'ImportDormitoryController',
+        resolve: helper.resolveFor('ngTable', 'ngDialog')
+    })
+    .state('app.importEmployee', {
+        url: '/importEmployee',
+        title: '员工批量导入',
+        templateUrl: helper.basepath('importEmployee.html'),
+        controller: 'ImportEmployeeController',
         resolve: helper.resolveFor('ngTable', 'ngDialog')
     })
 

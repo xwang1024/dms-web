@@ -1,17 +1,5 @@
-h3 
-  // START Language list
-  .pull-right
-    .btn-group(dropdown='', is-open='language.listIsOpen')
-      button.btn.btn-default(type='button', dropdown-toggle="")
-        | {{language.selected}}
-        span.caret
-      ul.dropdown-menu.dropdown-menu-right.animated.fadeInUpShort(role='menu')
-        li(ng-repeat='(localeId, langName) in language.available')
-          a(ng-click='language.set(localeId, $event)', href='#') {{langName}}
-  // END Language list    
-
-  | Dashboard
-  small {{ 'dashboard.WELCOME' | translate:{ appName: app.name } }}  !
+h3 个人中心
+  small 欢迎使用南京大学后勤集团 - 宿舍管理系统  !
 
 // START widgets box
 .row
@@ -20,44 +8,40 @@ h3
     .panel.widget.bg-primary
       .row.row-table
         .col-xs-4.text-center.bg-primary-dark.pv-lg
-          em.icon-cloud-upload.fa-3x
+          em.icon-home.fa-3x
         .col-xs-8.pv-lg
-          .h2.mt0 1700
-          .text-uppercase Uploads
+          .h2.mt0 358 / 901
+          .text-uppercase 已用 / 总床位数
   .col-lg-3.col-sm-6
     // START widget
     .panel.widget.bg-purple
       .row.row-table
         .col-xs-4.text-center.bg-purple-dark.pv-lg
-          em.icon-globe.fa-3x
+          em.icon-users.fa-3x
         .col-xs-8.pv-lg
-          .h2.mt0 700
-            small GB
-          .text-uppercase Quota
-  .col-lg-3.col-md-6.col-sm-12
+          .h2.mt0 150 / 150
+            small 
+          .text-uppercase 男 / 女员工数
+  .col-lg-3.col-sm-6
     // START widget
     .panel.widget.bg-green
       .row.row-table
         .col-xs-4.text-center.bg-green-dark.pv-lg
-          em.icon-bubbles.fa-3x
+          em.icon-docs.fa-3x
         .col-xs-8.pv-lg
-          .h2.mt0 500
-          .text-uppercase Reviews
-  .col-lg-3.col-md-6.col-sm-12
-    // START date widget
-    .panel.widget
+          .h2.mt0 5
+            small 条
+          .text-uppercase 处理入住申请
+  .col-lg-3.col-sm-6
+    // START widget
+    .panel.widget.bg-warning
       .row.row-table
-        .col-xs-4.text-center.bg-green.pv-lg
-          // See formats: https://docs.angularjs.org/api/ng/filter/date
-          now.text-sm(format='MMMM')
-          br
-          now.h2.mt0(format="d")
+        .col-xs-4.text-center.bg-warning-dark.pv-lg
+          em.icon-wrench.fa-3x
         .col-xs-8.pv-lg
-          now.text-uppercase(format='EEEE')
-          br
-          now.h2.mt0(format='h:mm')
-          now.text-muted.text-sm(format='a')
-    // END date widget    
+          .h2.mt0 5
+            small 条
+          .text-uppercase 处理维修申请
 // END widgets box
 
 .row
