@@ -17,6 +17,14 @@ function ($stateProvider, $locationProvider, $urlRouterProvider, helper) {
         controller: 'AppController',
         resolve: helper.resolveFor('fastclick', 'modernizr', 'icons', 'screenfull', 'animo', 'sparklines', 'slimscroll', 'classyloader', 'toaster', 'whirl')
     })
+    // 个人中心
+    .state('app.dashboard', {
+        url: '/dashboard',
+        title: 'Dashboard',
+        templateUrl: helper.basepath('dashboard.html'),
+        controller: 'DashboardController',
+        resolve: helper.resolveFor()
+    })
     // 宿舍信息
     .state('app.dormitory', {
         url: '/dormitory',
@@ -90,12 +98,7 @@ function ($stateProvider, $locationProvider, $urlRouterProvider, helper) {
 
 
 
-    .state('app.dashboard', {
-        url: '/dashboard',
-        title: 'Dashboard',
-        templateUrl: helper.basepath('dashboard.html'),
-        resolve: helper.resolveFor('flot-chart','flot-chart-plugins')
-    })
+    
     .state('app.dashboard_v2', {
         url: '/dashboard_v2',
         title: 'Dashboard v2',
