@@ -47,7 +47,7 @@ App.run(["$rootScope", "$state", "$stateParams",  '$window', '$templateCache', f
     },
     useFullLayout: false,
     hiddenFooter: false,
-    viewAnimation: 'ng-fadeRightUp'
+    viewAnimation: ''
   };
   $rootScope.user = {
     name:     'Admin',
@@ -79,7 +79,7 @@ function ($stateProvider, $locationProvider, $urlRouterProvider, helper) {
     // 宿舍信息
     .state('app.dormitory', {
         url: '/dormitory',
-        title: '宿舍管理',
+        title: '宿舍信息',
         templateUrl: helper.basepath('dormitory.html'),
         controller: 'DormitoryController',
         resolve: helper.resolveFor('ngTable', 'ngDialog','vector-map', 'vector-map-maps')
@@ -87,7 +87,7 @@ function ($stateProvider, $locationProvider, $urlRouterProvider, helper) {
     // 入住信息
     .state('app.accommodation', {
         url: '/accommodation',
-        title: '宿舍管理',
+        title: '入住信息',
         templateUrl: helper.basepath('accommodation.html'),
         controller: 'AccommodationController',
         resolve: helper.resolveFor('ngTable', 'ngDialog')
@@ -745,10 +745,11 @@ App
       // 跨平台的全屏API
       'screenfull':         ['vendor/screenfull/dist/screenfull.js'],
       // 向量地图插件
-      'vector-map':         ['vendor/ika.jvectormap/jquery-jvectormap-1.2.2.min.js',
-                             'vendor/ika.jvectormap/jquery-jvectormap-1.2.2.css'],
-      'vector-map-maps':    ['vendor/ika.jvectormap/jquery-jvectormap-world-mill-en.js',
-                             'vendor/ika.jvectormap/jquery-jvectormap-us-mill-en.js'],
+      'vector-map':         ['app/vendor/jvectormap/jquery-jvectormap-2.0.2.min.js',
+                             'app/vendor/jvectormap/jquery-jvectormap-2.0.2.css'],
+      'vector-map-maps':    ['app/vendor/vectorMaps/jquery-jvectormap-world-mill-en.js',
+                             'app/vendor/vectorMaps/jquery-jvectormap-us-mill-en.js',
+                             'app/vendor/vectorMaps/jquery-jvectormap-de-merc-en.js'],
       // google地图API
       'loadGoogleMapsJS':   ['app/vendor/gmap/load-google-maps.js'],
 
@@ -1399,6 +1400,38 @@ App.controller('DormitoryModifyController', [
 
 App.controller('DormitoryMapController', ['$scope', function($scope) {
   'use strict';
+
+  $scope.seriesData = {
+    'CA': 11100,   // Canada
+    'DE': 2510,    // Germany
+    'FR': 3710,    // France
+    'AU': 5710,    // Australia
+    'GB': 8310,    // Great Britain
+    'RU': 9310,    // Russia
+    'BR': 6610,    // Brazil
+    'IN': 7810,    // India
+    'CN': 4310,    // China
+    'US': 839,     // USA
+    'SA': 410      // Saudi Arabia
+  };
+  
+  $scope.markersData = [
+    { latLng:[41.90, 12.45],  name:'Vatican City'          },
+    { latLng:[43.73, 7.41],   name:'Monaco'                },
+    { latLng:[-0.52, 166.93], name:'Nauru'                 },
+    { latLng:[-8.51, 179.21], name:'Tuvalu'                },
+    { latLng:[7.11,171.06],   name:'Marshall Islands'      },
+    { latLng:[17.3,-62.73],   name:'Saint Kitts and Nevis' },
+    { latLng:[3.2,73.22],     name:'Maldives'              },
+    { latLng:[35.88,14.5],    name:'Malta'                 },
+    { latLng:[41.0,-71.06],   name:'New England'           },
+    { latLng:[12.05,-61.75],  name:'Grenada'               },
+    { latLng:[13.16,-59.55],  name:'Barbados'              },
+    { latLng:[17.11,-61.85],  name:'Antigua and Barbuda'   },
+    { latLng:[-4.61,55.45],   name:'Seychelles'            },
+    { latLng:[7.35,134.46],   name:'Palau'                 },
+    { latLng:[42.5,1.51],     name:'Andorra'               }
+  ];
 
 }]);
 
@@ -6130,6 +6163,35 @@ App.directive('dormitoryMap', ['vectorMap','$timeout', function(vectorMap, $time
       regionFill:   '#bbbec6'       // the base region color
   };
 
+  var plants = [
+    {name: '中文测试', coords: [50.0091294, 9.0371812], status: 'closed', offsets: [0, 2]},
+    {name: 'MZFR', coords: [49.0543102, 8.4825862], status: 'closed', offsets: [0, 2]},
+    {name: 'AVR', coords: [50.9030599, 6.4213693], status: 'closed'},
+    {name: 'KKR', coords: [53.1472465, 12.9903674], status: 'closed'},
+    {name: 'KRB', coords: [48.513264, 10.4020357], status: 'activeUntil2018'},
+    {name: 'KWO', coords: [49.364503, 9.076252], status: 'closed'},
+    {name: 'KWL', coords: [52.5331853, 7.2505223], status: 'closed', offsets: [0, -2]},
+    {name: 'HDR', coords: [50.1051446, 8.9348691], status: 'closed', offsets: [0, -2]},
+    {name: 'KKS', coords: [53.6200685, 9.5306289], status: 'closed'},
+    {name: 'KKN', coords: [48.6558015, 12.2500848], status: 'closed', offsets: [0, -2]},
+    {name: 'KGR', coords: [54.1417497, 13.6583877], status: 'closed'},
+    {name: 'KWB', coords: [49.709331, 8.415865], status: 'closed'},
+    {name: 'KWW', coords: [51.6396481, 9.3915617], status: 'closed'},
+    {name: 'GKN', coords: [49.0401151, 9.1721088], status: 'activeUntil2022'},
+    {name: 'KKB', coords: [53.8913533, 9.2005777], status: 'closed', offsets: [0, -5]},
+    {name: 'KKI', coords: [48.5544748, 12.3472095], status: 'activeUntil2022', offsets: [0, 2]},
+    {name: 'KKU', coords: [53.4293465, 8.4774649], status: 'closed'},
+    {name: 'KNK', coords: [49.1473279, 8.3827739], status: 'closed'},
+    {name: 'KKP', coords: [49.2513078, 8.4356761], status: 'activeUntil2022', offsets: [0, -2]},
+    {name: 'KKG', coords: [49.9841308, 10.1846373], status: 'activeUntil2018'},
+    {name: 'KKK', coords: [53.4104656, 10.4091597], status: 'closed'},
+    {name: 'KWG', coords: [52.0348748, 9.4097793], status: 'activeUntil2022'},
+    {name: 'KBR', coords: [53.850666, 9.3457603], status: 'closed', offsets: [0, 5]},
+    {name: 'KMK', coords: [50.408791, 7.4861956], status: 'closed'},
+    {name: 'THTR', coords: [51.6786228, 7.9700232], status: 'closed'},
+    {name: 'KKE', coords: [52.4216974, 7.3706389], status: 'activeUntil2022', offsets: [0, 2]}
+  ];
+
   return {
     restrict: 'EA',
     link: function(scope, element, attrs) {
@@ -6146,10 +6208,49 @@ App.directive('dormitoryMap', ['vectorMap','$timeout', function(vectorMap, $time
       
       element.css('height', mapHeight);
       
-      vectorMap.init(element , options, scope.seriesData, scope.markersData);
-      $timeout(function() {
-        element.resize();
-    }, 0)
+      // element.vectorMap();
+
+      // vectorMap.init(element , options, scope.seriesData, scope.markersData);
+      element.vectorMap({
+        container: $(element),
+        map: 'de_merc_en',
+        markers: plants.map(function(h){ return {name: h.name, latLng: h.coords} }),
+        labels: {
+            markers: {
+              render: function(index){
+                return plants[index].name;
+              },
+              offsets: function(index){
+                var offset = plants[index]['offsets'] || [0, 0];
+
+                return [offset[0] - 7, offset[1] + 3];
+              }
+            }
+        },
+        series: {
+          markers: [{
+            attribute: 'image',
+            scale: {
+              'closed': '/app/img/icon-np-3.png',
+              'activeUntil2018': '/app/img/icon-np-3.png',
+              'activeUntil2022': '/app/img/icon-np-3.png'
+            },
+            values: plants.reduce(function(p, c, i){ p[i] = c.status; return p }, {}),
+            legend: {
+              horizontal: true,
+              title: 'Nuclear power station status',
+              labelRender: function(v){
+                return {
+                  closed: 'Closed',
+                  activeUntil2018: 'Scheduled for shut down<br> before 2018',
+                  activeUntil2022: 'Scheduled for shut down<br> before 2022'
+                }[v];
+              }
+            }
+          }]
+        }
+      });
+      $timeout(function() { element.resize(); }, 0)
     }
   };
 
@@ -7446,7 +7547,7 @@ App.directive('validateForm', function() {
  * Init jQuery Vector Map plugin
  =========================================================*/
 
-App.directive('vectorMapss', ['vectorMap', function(vectorMap){
+App.directive('vectorMap', ['vectorMap', function(vectorMap){
   'use strict';
 
   var defaultColors = {

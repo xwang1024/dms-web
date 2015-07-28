@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>jVectorMap demo</title>
+  <link rel="stylesheet" href="jvectormap/jquery-jvectormap-2.0.2.css" type="text/css" media="screen"/>
+  <script src="../../master/bower_components/jquery/dist/jquery.js"></script>
+  <script src="jvectormap/jquery-jvectormap-2.0.2.min.js"></script>
+  <script src="vectorMaps/jquery-jvectormap-world-mill-en.js"></script>
+</head>
+<body>
+  <div id="world-map" style="width: 600px; height: 400px"></div>
+  <script>
+    $(function(){
+      $('#world-map').vectorMap();
+    });
+  </script>
+</body>
+</html>
+
+If you open created pag

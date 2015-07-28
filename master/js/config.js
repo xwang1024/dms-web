@@ -20,7 +20,7 @@ function ($stateProvider, $locationProvider, $urlRouterProvider, helper) {
     // 宿舍信息
     .state('app.dormitory', {
         url: '/dormitory',
-        title: '宿舍管理',
+        title: '宿舍信息',
         templateUrl: helper.basepath('dormitory.html'),
         controller: 'DormitoryController',
         resolve: helper.resolveFor('ngTable', 'ngDialog','vector-map', 'vector-map-maps')
@@ -28,7 +28,7 @@ function ($stateProvider, $locationProvider, $urlRouterProvider, helper) {
     // 入住信息
     .state('app.accommodation', {
         url: '/accommodation',
-        title: '宿舍管理',
+        title: '入住信息',
         templateUrl: helper.basepath('accommodation.html'),
         controller: 'AccommodationController',
         resolve: helper.resolveFor('ngTable', 'ngDialog')

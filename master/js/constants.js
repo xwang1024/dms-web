@@ -56,10 +56,11 @@ App
       // 跨平台的全屏API
       'screenfull':         ['vendor/screenfull/dist/screenfull.js'],
       // 向量地图插件
-      'vector-map':         ['vendor/ika.jvectormap/jquery-jvectormap-1.2.2.min.js',
-                             'vendor/ika.jvectormap/jquery-jvectormap-1.2.2.css'],
-      'vector-map-maps':    ['vendor/ika.jvectormap/jquery-jvectormap-world-mill-en.js',
-                             'vendor/ika.jvectormap/jquery-jvectormap-us-mill-en.js'],
+      'vector-map':         ['app/vendor/jvectormap/jquery-jvectormap-2.0.2.min.js',
+                             'app/vendor/jvectormap/jquery-jvectormap-2.0.2.css'],
+      'vector-map-maps':    ['app/vendor/vectorMaps/jquery-jvectormap-world-mill-en.js',
+                             'app/vendor/vectorMaps/jquery-jvectormap-us-mill-en.js',
+                             'app/vendor/vectorMaps/jquery-jvectormap-de-merc-en.js'],
       // google地图API
       'loadGoogleMapsJS':   ['app/vendor/gmap/load-google-maps.js'],
 
