@@ -13,7 +13,8 @@
     "sref": "#",
     "icon": "icon-home",
     "submenu": [
-      {"text": "宿舍信息", "sref": "app.dormitory"},
+      {"text": "地理视图", "sref": "app.dormitoryMap"},
+      {"text": "列表视图", "sref": "app.dormitoryList"},
       {"text": "入住信息", "sref": "app.accommodation"}
     ]
   },

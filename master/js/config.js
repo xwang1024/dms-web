@@ -25,13 +25,21 @@ function ($stateProvider, $locationProvider, $urlRouterProvider, helper) {
         controller: 'DashboardController',
         resolve: helper.resolveFor()
     })
-    // 宿舍信息
-    .state('app.dormitory', {
-        url: '/dormitory',
-        title: '宿舍信息',
-        templateUrl: helper.basepath('dormitory.html'),
-        controller: 'DormitoryController',
-        resolve: helper.resolveFor('ngTable', 'ngDialog','vector-map', 'vector-map-maps')
+    // 宿舍地图
+    .state('app.dormitoryMap', {
+        url: '/dormitoryMap',
+        title: '宿舍地图',
+        templateUrl: helper.basepath('dormitoryMap.html'),
+        controller: 'DormitoryMapController',
+        resolve: helper.resolveFor('ngTable', 'ngDialog')
+    })
+    // 宿舍列表
+    .state('app.dormitoryList', {
+        url: '/dormitoryList',
+        title: '宿舍列表',
+        templateUrl: helper.basepath('dormitoryList.html'),
+        controller: 'DormitoryListController',
+        resolve: helper.resolveFor('ngTable', 'ngDialog')
     })
     // 入住信息
     .state('app.accommodation', {

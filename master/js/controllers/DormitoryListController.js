@@ -1,4 +1,4 @@
-App.controller('DormitoryController', [
+App.controller('DormitoryListController', [
     '$scope', '$http', '$state','$filter','ngTableParams','$resource', '$timeout', 'ngTableDataService', 'ngDialog', 'ShareService',
     function($scope, $http, $state, $filter, ngTableParams, $resource, $timeout, ngTableDataService, ngDialog, ShareService) {
 
