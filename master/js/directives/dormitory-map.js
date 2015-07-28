@@ -53,25 +53,32 @@ App.directive('dormitoryMap', ['vectorMap','$timeout', function(vectorMap, $time
       
       element.css('height', mapHeight);
       
-      // element.vectorMap();
-
-      // vectorMap.init(element , options, scope.seriesData, scope.markersData);
       element.vectorMap({
+        // 放置地图的容器
         container: $(element),
+        // 使用的地图，如果需要自定义地图，记得引入相应的js文件，生成js文件的方法：画svg图，导入googlcode的svg-edit中得到svg的xml代码，导入jvectormap官方的生成器中得到地图的js文件
         map: 'de_merc_en',
-        markers: plants.map(function(h){ return {name: h.name, latLng: h.coords} }),
+        // 在初始化时要添加进进地图的坐标列表，map方法是遍历列表获得一个新的列表，用于array的转换
+        markers: plants.map(function(h){
+          return { 
+            name: h.name, // 标记点的名称
+            latLng: h.coords } // 标记点的坐标
+        }),
+        // 在地图上显示的静态标签（可以对点markers或者区域regions进行标记）
         labels: {
             markers: {
+              // 显示的值
               render: function(index){
                 return plants[index].name;
               },
+              // 显示的位置
               offsets: function(index){
                 var offset = plants[index]['offsets'] || [0, 0];
-
                 return [offset[0] - 7, offset[1] + 3];
               }
             }
         },
+        // 除了地图包含的信息之外还需要添加的点或者是区域
         series: {
           markers: [{
             attribute: 'image',
