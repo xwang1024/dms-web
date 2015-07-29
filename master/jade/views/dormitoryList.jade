@@ -57,8 +57,8 @@ h3 列表视图
               label
                 input(type='checkbox', ng-model="checkboxes.items[item.dormitory.id]")
                 span.fa.fa-check
-          td(data-title="'详细地址'") {{ item.dormitory.campus }} - {{ item.dormitory.address }} - {{ item.dormitory.floor }} - {{ item.dormitory.doorplate }}
-          td.text-center(data-title="'类型'", sortable="'dormitory.type'", width="100") {{ 'dormitory.type.' + item.dormitory.type | translate }}
+          td(data-title="'详细地址'") {{ item.dormitory.addressDetail }}
+          td.text-center(data-title="'类型'", sortable="'dormitory.type'", width="100") {{ item.dormitory.typeTrans }}
           td.text-center(data-title="'核定'", sortable="'dormitory.capacityCnt'", width="70") {{ item.dormitory.capacityCnt }}
           td.text-center(data-title="'实际'", sortable="'dormitory.occupiedCnt'", width="70") {{ item.dormitory.occupiedCnt }}
           td(data-title="'住户'")
@@ -95,7 +95,7 @@ h3 列表视图
         .form-group
           label.col-sm-2.control-label(for='input-age') 类型
           .col-sm-10
-            input#input-id-1.form-control(type='text', ng-pattern="/^[0-9]+$/", ng-model="dormitory.type")
+            input#input-id-1.form-control(type='text', ng-pattern="/^[0-9]+$/", ng-model="dormitory.typeTrans")
         .form-group
           label.col-sm-2.control-label(for='input-money') 核定
           .col-sm-10

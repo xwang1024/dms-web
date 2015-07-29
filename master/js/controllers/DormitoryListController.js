@@ -1,10 +1,13 @@
 App.controller('DormitoryListController', [
-    '$scope', '$http', '$state','$filter','ngTableParams','$resource', '$timeout', 'ngTableDataService', 'ngDialog', 'ShareService',
-    function($scope, $http, $state, $filter, ngTableParams, $resource, $timeout, ngTableDataService, ngDialog, ShareService) {
+    '$scope', '$http', '$state','$filter','ngTableParams','$resource', '$timeout', 'ngTableDataService', 'ngDialog', 'ShareService', 'DormitoryService', 
+    function($scope, $http, $state, $filter, ngTableParams, $resource, $timeout, ngTableDataService, ngDialog, ShareService, DormitoryService) {
 
     'use strict';
     var vm = this;
     // ========== 数据区 ==========
+    var trans = {
+      "GROUP_MALE" : "集体宿舍 - 男"
+    };
     var data = [{
         "dormitory" : {
             "id" : 10001,
@@ -72,18 +75,20 @@ App.controller('DormitoryListController', [
     $scope.searchKeywords = "";
     // ----------------------------
     // ============================
-
+    var Api = $resource('server/dormitory-list.json');
     vm.tableParams = new ngTableParams({
         page: 1,
         count: 10
     }, {
         total: 0,
-        getData: function($defer, params) {
-            //queryData();
-            // console.log(data);
+        getData: function($defer, params, Api) {
+            angular.forEach(data, function(item) {
+                item.dormitory.addressDetail = item.dormitory.campus + " - " + item.dormitory.address + " - " + item.dormitory.floor + " - " + item.dormitory.doorplate;
+                item.dormitory.typeTrans = trans[item.dormitory.type];
+                console.log(item.dormitory.type);
+            });
             var searchedData = searchData(data);
             var orderedData = params.sorting() ? $filter('orderBy')(searchedData, params.orderBy()) : searchedData;
-            orderedData = params.filter() ? $filter('filter')(orderedData, params.filter()) : orderedData;
             params.total(orderedData.length);
             $defer.resolve($scope.dormitories = orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count()));
         }
@@ -130,71 +135,6 @@ App.controller('DormitoryListController', [
         $scope.operating = true;
         $http.get("server/dormitory-list.json")
         .success(function(ddd) {
-            var resData = {
-                "status" : true,
-                "message" : "",
-                "count" : 2,
-                "result" : [{
-                    "dormitory" : {
-                        "id" : 10001,
-                        "campus" : "鼓楼",
-                        "address" : "陶北新村",
-                        "floor" : "1层",
-                        "doorplate" : "101",
-                        "type" : "GROUP_MALE",
-                        "capacityCnt" : 5,
-                        "occupiedCnt" : 2
-                    },
-                    "employees" : [{
-                        "id" : 20001,
-                        "name" : "胡志刚",
-                        "gender" : "MALE",
-                        "idNum" : "342623196505063528",
-                        "department" : "运输",
-                        "dutyDate" : "2012-02-04",
-                        "workCampus" : "鼓楼",
-                        "workLocationDetail" : "校车管理中心",
-                        "spouseType" : "NONE",
-                        "outsideSpouse" : {}
-                    },{
-                        "id" : 20002,
-                        "name" : "王富贵",
-                        "gender" : "MALE",
-                        "idNum" : "342623196908163588",
-                        "department" : "物业",
-                        "dutyDate" : "2015-03-07",
-                        "workCampus" : "鼓楼",
-                        "workLocationDetail" : "教学楼",
-                        "spouseType" : "NONE",
-                        "outsideSpouse" : {}
-                    }]
-                },{
-                    "dormitory" : {
-                        "id" : 10002,
-                        "campus" : "鼓楼",
-                        "address" : "陶北新村",
-                        "floor" : "1层",
-                        "doorplate" : "102",
-                        "type" : "GROUP_MALE",
-                        "capacityCnt" : 4,
-                        "occupiedCnt" : 1
-                    },
-                    "employees" : [{
-                        "id" : 20003,
-                        "name" : "胡志",
-                        "gender" : "MALE",
-                        "idNum" : "342623198805063538",
-                        "department" : "幼儿园",
-                        "dutyDate" : "2012-02-14",
-                        "workCampus" : "鼓楼",
-                        "workLocationDetail" : "南大幼儿园",
-                        "spouseType" : "NONE",
-                        "outsideSpouse" : {}
-                    }]
-                }]
-            };
-
-
             // console.log(resData);
             if(resData.status) {
                 vm.data = resData.result;
@@ -206,12 +146,11 @@ App.controller('DormitoryListController', [
           alert("1");
         });
     };
-    queryData();
 
     var searchData = function() {
         var filterData = data;
-        if($scope.searchDormitory) {
-            var keywords = $scope.searchDormitory.split(" ");
+        if($scope.searchKeywords) {
+            var keywords = $scope.searchKeywords.split(" ");
             var i;
             for(i in keywords) {
                 filterData = $filter('filter')(filterData,keywords[i]);
