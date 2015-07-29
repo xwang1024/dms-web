@@ -1,4 +1,10 @@
 {
+  "dormitory": {
+    "type" : {
+      "GROUP_MALE" : "集体宿舍 - 男"
+    }
+  },
+  
   "dashboard": {
     "WELCOME": "欢迎使用 {{appName}}"
   },

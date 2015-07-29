@@ -47,7 +47,7 @@ App.run(["$rootScope", "$state", "$stateParams",  '$window', '$templateCache', f
     },
     useFullLayout: false,
     hiddenFooter: false,
-    viewAnimation: ''
+    viewAnimation: 'fadeInRight'
   };
   $rootScope.user = {
     name:     'Admin',

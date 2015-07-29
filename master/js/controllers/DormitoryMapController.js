@@ -3,5 +3,5 @@ App.controller('DormitoryMapController', [
     function($scope, $http, $state, $filter, ngTableParams, $resource, $timeout, ngTableDataService, ngDialog, ShareService) {
 
     'use strict';
-    
+	    
 }]);

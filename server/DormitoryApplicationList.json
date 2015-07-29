@@ -1,0 +1,44 @@
+{
+    "status" : true,
+    "message" : "",
+    "count" : 2,
+    "result" : [
+	    {
+			"id" : 1,
+		    "employees" : [{
+			    "id" : 1,
+			    "name" : "王婷",
+			    "gender" : "FEMAEL",
+			    "idNum" : "34262319900205659X",
+			    "department" : "幼儿园",
+			    "dutyDate" : "2015-07-07",
+			    "workCampus" : "鼓楼",
+			    "workLocationDetail" : "南京大学幼儿园",
+			    "spouseType" : "NONE",
+			    "outsideSpouse" : {}
+			}],
+		    "date" : "2015-03-04",
+		    "type" : "GROUP_FEMALE",
+		    "content" : "申请理由1",
+		    "status" : "APPROVED"
+	    },{
+			"id" : 1,
+		    "employees" : [{
+			    "id" : 1,
+			    "name" : "夏娜",
+			    "gender" : "FEMAEL",
+			    "idNum" : "34262319940205659X",
+			    "department" : "幼儿园",
+			    "dutyDate" : "2015-07-07",
+			    "workCampus" : "鼓楼",
+			    "workLocationDetail" : "南京大学幼儿园",
+			    "spouseType" : "NONE",
+			    "outsideSpouse" : {}
+			}],
+		    "date" : "2015-03-05",
+		    "type" : "GROUP_FEMALE",
+		    "content" : "申请理由2",
+		    "status" : "APPROVED"
+	    }
+	]
+}

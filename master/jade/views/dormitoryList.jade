@@ -5,61 +5,69 @@ h3 列表视图
   .panel.panel-default
     .panel-heading
       form.pull-right.hidden-xs.form-inline
+        | 筛选：
         // START box placeholder
-        .btn-group(dropdown='dropdown')
-          button.btn.btn-default.btn-sm(dropdown-toggle="") 全部校区
-            b.caret
+        .btn-group(dropdown='dropdown', is-open="campusOpen")
+          button.btn.btn-info.btn-sm(dropdown-toggle="", style="min-width:90px;")
+            span.pull-left(ng-show="selectedCampus" , ng-bind="selectedCampus")
+            span.pull-left(ng-hide="selectedCampus") 所有校区
+            b.caret.pull-right(style="margin-top:8px")
           ul.dropdown-menu(role='menu')
             li
-              a(href='#') 鼓楼
-            li
-              a(href='#') 仙林
+              a(href='#', ng-click='selectCampus("")') 所有校区
+            li(ng-repeat='(key, value) in addressTree')
+              a(href='#', ng-click='selectCampus(key)', ng-bind="key")
         // END button group
         // START box placeholder
-        .btn-group(dropdown='dropdown')
-          button.btn.btn-default.btn-sm(dropdown-toggle="") 全部楼幢
-            b.caret
+        .btn-group(dropdown='dropdown', is-open="addressOpen", ng-show="selectedCampus")
+          button.btn.btn-info.btn-sm(dropdown-toggle="", style="min-width:90px;")
+            span.pull-left(ng-show="selectedAddress" , ng-bind="selectedAddress")
+            span.pull-left(ng-hide="selectedAddress") 所有地址
+            b.caret.pull-right(style="margin-top:8px")
           ul.dropdown-menu(role='menu')
             li
-              a(href='#') 小粉桥平房
-            li
-              a(href='#') 陶园新村
+              a(href='#', ng-click='selectAddress("")') 所有地址
+            li(ng-repeat='(key, value) in addressTree[selectedCampus]', ng-if='!selectedCampus')
+              a(href='#', ng-click='selectAddress(key)', ng-bind="key")
+            li(ng-repeat='(key, value) in addressTree[selectedCampus]', ng-if='selectedCampus')
+              a(href='#', ng-click='selectAddress(key)', ng-bind="key")
         // END button group
         // START box placeholder
-        .btn-group(dropdown='dropdown')
-          button.btn.btn-default.btn-sm(dropdown-toggle="") 全部楼层
-            b.caret
+        .btn-group(dropdown='dropdown', is-open="floorOpen", ng-show="selectedCampus && selectedAddress")
+          button.btn.btn-info.btn-sm(dropdown-toggle="", style="min-width:90px;")
+            span.pull-left(ng-show="selectedFloor" , ng-bind="selectedFloor")
+            span.pull-left(ng-hide="selectedFloor") 所有楼层
+            b.caret.pull-right(style="margin-top:8px")
           ul.dropdown-menu(role='menu')
             li
-              a(href='#') 1层
-            li
-              a(href='#') 2层
+              a(href='#', ng-click='selectFloor("")') 所有楼层
+            li(ng-repeat='(key, value) in addressTree[selectedCampus][selectedAddress]')
+              a(href='#', ng-click='selectFloor(key)', ng-bind="key")
         // END button group
-        input.form-control.input-sm.form-horizontal(type='text', ng-model="searchDormitory", placeholder='表格搜索...')
-        button.btn.btn-default.btn-sm(ng-click='table.tableParams.sorting({})') 复位
+        input.form-control.input-sm.form-horizontal(type='text', ng-model="searchKeywords", placeholder='表格搜索...')
+        button.btn.btn-info.btn-sm(ng-click='table.tableParams.sorting({})') 复位
       .panel-title 宿舍列表
         
     //- ng-table指明了使用什么样的参数来创建表格，export-csv是插件ng-table-export的功能，仅能导出为csv
     table.table(ng-table='table.tableParams')
       tbody
-        tr(ng-repeat='user in $data')
+        tr(ng-repeat='item in $data')
           td(width="40", header="'ng-table/headers/checkbox.html'")
             .checkbox.c-checkbox
               label
-                input(type='checkbox', ng-model="checkboxes.items[user.id]")
+                input(type='checkbox', ng-model="checkboxes.items[item.dormitory.id]")
                 span.fa.fa-check
-          td(data-title="'详细地址'", sortable="'addressDetail'") 鼓楼 - 小粉桥平房 - 1层 - 101
-          td.text-center(data-title="'类型'", sortable="'type'", width="100") 集体宿舍 - 男
-          td.text-center(data-title="'核定'", sortable="'capacityCnt'", width="70") 3
-          td.text-center(data-title="'实际'", sortable="'occupiedCnt'", width="70") 2
+          td(data-title="'详细地址'") {{ item.dormitory.campus }} - {{ item.dormitory.address }} - {{ item.dormitory.floor }} - {{ item.dormitory.doorplate }}
+          td.text-center(data-title="'类型'", sortable="'dormitory.type'", width="100") {{ 'dormitory.type.' + item.dormitory.type | translate }}
+          td.text-center(data-title="'核定'", sortable="'dormitory.capacityCnt'", width="70") {{ item.dormitory.capacityCnt }}
+          td.text-center(data-title="'实际'", sortable="'dormitory.occupiedCnt'", width="70") {{ item.dormitory.occupiedCnt }}
           td(data-title="'住户'")
-            .btn.btn-primary.btn-xs 王大锤
-            .btn.btn-primary.btn-xs 王二锤
-            .btn.btn-primary.btn-xs 王三锤
-            .btn.btn-primary.btn-xs 王四锤
+            button.btn.btn-primary.btn-xs(ng-repeat="employee in item.employees", ng-click="showEmployee(item)", style="margin-right:5px;min-width:55px;") {{ employee.name }}
+            button.btn.btn-green.btn-xs(title='迁入', data-ng-click='addHouseHolder(item)', ng-if="item.dormitory.capacityCnt - item.dormitory.occupiedCnt > 0")
+              i.fa.fa-plus
           td.text-center(data-title="'操作'", width="80")
-            button.btn.btn-warning.btn-xs(title='编辑', data-ng-click='modify(user)')
-                           i.fa.fa-pencil
+            button.btn.btn-warning.btn-xs(title='编辑', data-ng-click='modifyDormitory(item.dormitory)')
+              i.fa.fa-pencil
           //-
             button.btn.btn-success.btn-xs(title='详情', data-ng-click='info(user)')
                            i.fa.fa-ellipsis-h
@@ -79,23 +87,23 @@ h3 列表视图
         .form-group
           label.col-sm-2.control-label(for='input-name') 地址
           .col-sm-10
-            input#input-id-1.form-control(type='text', disabled, ng-model="modifiyingUser.name")
+            input#input-id-1.form-control(type='text', disabled, ng-model="dormitory.addressDetail")
         .form-group
           label.col-sm-2.control-label(for='input-age') 宿舍号
           .col-sm-10
-            input#input-id-1.form-control(type='text', ng-pattern="/^[0-9]+$/", ng-model="modifiyingUser.age")
+            input#input-id-1.form-control(type='text', ng-pattern="/^[0-9]+$/", ng-model="dormitory.doorplate")
         .form-group
           label.col-sm-2.control-label(for='input-age') 类型
           .col-sm-10
-            input#input-id-1.form-control(type='text', ng-pattern="/^[0-9]+$/", ng-model="modifiyingUser.age")
+            input#input-id-1.form-control(type='text', ng-pattern="/^[0-9]+$/", ng-model="dormitory.type")
         .form-group
           label.col-sm-2.control-label(for='input-money') 核定
           .col-sm-10
-            input#input-id-1.form-control(type='number', ng-model="modifiyingUser.money")
+            input#input-id-1.form-control(type='number', ng-model="dormitory.capacityCnt")
         .form-group
           label.col-sm-2.control-label(for='input-money') 实际
           .col-sm-10
-            input#input-id-1.form-control(type='number', ng-model="modifiyingUser.money")
+            input#input-id-1.form-control(type='number', ng-model="dormitory.occupiedCnt")
       .row
         .container-fluid
           span.pull-right

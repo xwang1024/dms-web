@@ -1,0 +1,21 @@
+{
+    "status" : true,
+    "message" : "",
+    "count" : 1,
+    "result" : [
+	    {
+		    "id" : 30001,
+		    "username" : "集团办公室",
+		    "password" : "******", 
+		    "type" : "OFFICE",
+		    "department" : "集团办公室"
+	    },
+	    {
+			"id" : 30002,
+		    "username" : "分管高层",
+		    "password" : "******", 
+		    "type" : "ZHONG_XIN",
+		    "department" : "分管高层"
+	    }
+	]
+}

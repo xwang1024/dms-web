@@ -1,0 +1,79 @@
+{
+    "status" : true,
+    "message" : "",
+    "count" : 2,
+    "result" : [
+	    {
+	        "employee" : {
+				"id" : 20001,
+				"name" : "胡志刚",
+			    "gender" : "MALE",
+			    "idNum" : "342623196505063528",
+			    "department" : "运输",
+			    "dutyDate" : "2012-02-04",
+			    "workCampus" : "鼓楼",
+			    "workLocationDetail" : "校车管理中心",
+			    "spouseType" : "NONE",
+			    "outsideSpouse" : {}
+			},
+	        "dormitory" : {
+				"id" : 10001,
+				"campus" : "鼓楼",
+				"address" : "陶北新村",
+			    "floor" : "1层",
+			    "doorplate" : "101",
+			    "type" : "GROUP_MALE",
+			    "capacityCnt" : 5,
+			    "occupiedCnt" : 2,
+	        }
+	    },
+	    {
+	        "employee" : {
+				"id" : 20002,
+				"name" : "王富贵",
+			    "gender" : "MALE",
+			    "idNum" : "342623196908163588",
+			    "department" : "物业",
+			    "dutyDate" : "2015-03-07",
+			    "workCampus" : "鼓楼",
+			    "workLocationDetail" : "教学楼",
+			    "spouseType" : "NONE",
+			    "outsideSpouse" : {}
+			},
+	        "dormitory" : {
+				"id" : 10001,
+				"campus" : "鼓楼",
+				"address" : "陶北新村",
+			    "floor" : "1层",
+			    "doorplate" : "101",
+			    "type" : "GROUP_MALE",
+			    "capacityCnt" : 5,
+			    "occupiedCnt" : 2,
+	        }
+	    },
+	    {
+	        "employee" : {
+				"id" : 20003,
+				"name" : "胡志",
+			    "gender" : "MALE",
+			    "idNum" : "342623198805063538",
+			    "department" : "幼儿园",
+			    "dutyDate" : "2012-02-14",
+			    "workCampus" : "鼓楼",
+			    "workLocationDetail" : "南大幼儿园",
+			    "spouseType" : "NONE",
+			    "outsideSpouse" : {}
+			},
+	        "dormitory" : {
+				"id" : 10002,
+				"campus" : "鼓楼",
+				"address" : "陶北新村",
+			    "floor" : "1层",
+			    "doorplate" : "102",
+			    "type" : "GROUP_MALE",
+			    "capacityCnt" : 4,
+			    "occupiedCnt" : 1,
+			}
+	    }
+	]
+}

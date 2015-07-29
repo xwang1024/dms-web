@@ -4,71 +4,82 @@
 <div ng-controller="DormitoryListController as table" class="container-fluid">
    <div class="panel panel-default">
       <div class="panel-heading">
-         <form class="pull-right hidden-xs form-inline">
+         <form class="pull-right hidden-xs form-inline">筛选：
             <!-- START box placeholder-->
-            <div dropdown="dropdown" class="btn-group">
-               <button dropdown-toggle="" class="btn btn-default btn-sm">全部校区<b class="caret"></b>
+            <div dropdown="dropdown" is-open="campusOpen" class="btn-group">
+               <button dropdown-toggle="" style="min-width:90px;" class="btn btn-info btn-sm">
+                  <span ng-show="selectedCampus" ng-bind="selectedCampus" class="pull-left"></span>
+                  <span ng-hide="selectedCampus" class="pull-left">所有校区</span><b style="margin-top:8px" class="caret pull-right"></b>
                </button>
                <ul role="menu" class="dropdown-menu">
-                  <li><a href="#">鼓楼</a>
+                  <li><a href="#" ng-click="selectCampus(&quot;&quot;)">所有校区</a>
                   </li>
-                  <li><a href="#">仙林</a>
+                  <li ng-repeat="(key, value) in addressTree">
+                     <a href="#" ng-click="selectCampus(key)" ng-bind="key"></a>
                   </li>
                </ul>
             </div>
             <!-- END button group-->
             <!-- START box placeholder-->
-            <div dropdown="dropdown" class="btn-group">
-               <button dropdown-toggle="" class="btn btn-default btn-sm">全部楼幢<b class="caret"></b>
+            <div dropdown="dropdown" is-open="addressOpen" ng-show="selectedCampus" class="btn-group">
+               <button dropdown-toggle="" style="min-width:90px;" class="btn btn-info btn-sm">
+                  <span ng-show="selectedAddress" ng-bind="selectedAddress" class="pull-left"></span>
+                  <span ng-hide="selectedAddress" class="pull-left">所有地址</span><b style="margin-top:8px" class="caret pull-right"></b>
                </button>
                <ul role="menu" class="dropdown-menu">
-                  <li><a href="#">小粉桥平房</a>
+                  <li><a href="#" ng-click="selectAddress(&quot;&quot;)">所有地址</a>
                   </li>
-                  <li><a href="#">陶园新村</a>
+                  <li ng-repeat="(key, value) in addressTree[selectedCampus]" ng-if="!selectedCampus">
+                     <a href="#" ng-click="selectAddress(key)" ng-bind="key"></a>
+                  </li>
+                  <li ng-repeat="(key, value) in addressTree[selectedCampus]" ng-if="selectedCampus">
+                     <a href="#" ng-click="selectAddress(key)" ng-bind="key"></a>
                   </li>
                </ul>
             </div>
             <!-- END button group-->
             <!-- START box placeholder-->
-            <div dropdown="dropdown" class="btn-group">
-               <button dropdown-toggle="" class="btn btn-default btn-sm">全部楼层<b class="caret"></b>
+            <div dropdown="dropdown" is-open="floorOpen" ng-show="selectedCampus &amp;&amp; selectedAddress" class="btn-group">
+               <button dropdown-toggle="" style="min-width:90px;" class="btn btn-info btn-sm">
+                  <span ng-show="selectedFloor" ng-bind="selectedFloor" class="pull-left"></span>
+                  <span ng-hide="selectedFloor" class="pull-left">所有楼层</span><b style="margin-top:8px" class="caret pull-right"></b>
                </button>
                <ul role="menu" class="dropdown-menu">
-                  <li><a href="#">1层</a>
+                  <li><a href="#" ng-click="selectFloor(&quot;&quot;)">所有楼层</a>
                   </li>
-                  <li><a href="#">2层</a>
+                  <li ng-repeat="(key, value) in addressTree[selectedCampus][selectedAddress]">
+                     <a href="#" ng-click="selectFloor(key)" ng-bind="key"></a>
                   </li>
                </ul>
             </div>
             <!-- END button group-->
-            <input type="text" ng-model="searchDormitory" placeholder="表格搜索..." class="form-control input-sm form-horizontal" />
-            <button ng-click="table.tableParams.sorting({})" class="btn btn-default btn-sm">复位</button>
+            <input type="text" ng-model="searchKeywords" placeholder="表格搜索..." class="form-control input-sm form-horizontal" />
+            <button ng-click="table.tableParams.sorting({})" class="btn btn-info btn-sm">复位</button>
          </form>
          <div class="panel-title">宿舍列表</div>
       </div>
       <table ng-table="table.tableParams" class="table">
          <tbody>
-            <tr ng-repeat="user in $data">
+            <tr ng-repeat="item in $data">
                <td width="40" header="'ng-table/headers/checkbox.html'">
                   <div class="checkbox c-checkbox">
                      <label>
-                        <input type="checkbox" ng-model="checkboxes.items[user.id]" />
+                        <input type="checkbox" ng-model="checkboxes.items[item.dormitory.id]" />
                         <span class="fa fa-check"></span>
                      </label>
                   </div>
                </td>
-               <td data-title="'详细地址'" sortable="'addressDetail'">鼓楼 - 小粉桥平房 - 1层 - 101</td>
-               <td data-title="'类型'" sortable="'type'" width="100" class="text-center">集体宿舍 - 男</td>
-               <td data-title="'核定'" sortable="'capacityCnt'" width="70" class="text-center">3</td>
-               <td data-title="'实际'" sortable="'occupiedCnt'" width="70" class="text-center">2</td>
+               <td data-title="'详细地址'">{{ item.dormitory.campus }} - {{ item.dormitory.address }} - {{ item.dormitory.floor }} - {{ item.dormitory.doorplate }}</td>
+               <td data-title="'类型'" sortable="'dormitory.type'" width="100" class="text-center">{{ 'dormitory.type.' + item.dormitory.type | translate }}</td>
+               <td data-title="'核定'" sortable="'dormitory.capacityCnt'" width="70" class="text-center">{{ item.dormitory.capacityCnt }}</td>
+               <td data-title="'实际'" sortable="'dormitory.occupiedCnt'" width="70" class="text-center">{{ item.dormitory.occupiedCnt }}</td>
                <td data-title="'住户'">
-                  <div class="btn btn-primary btn-xs">王大锤</div>
-                  <div class="btn btn-primary btn-xs">王二锤</div>
-                  <div class="btn btn-primary btn-xs">王三锤</div>
-                  <div class="btn btn-primary btn-xs">王四锤</div>
+                  <button ng-repeat="employee in item.employees" ng-click="showEmployee(item)" style="margin-right:5px;min-width:55px;" class="btn btn-primary btn-xs">{{ employee.name }}</button>
+                  <button title="迁入" data-ng-click="addHouseHolder(item)" ng-if="item.dormitory.capacityCnt - item.dormitory.occupiedCnt &gt; 0" class="btn btn-green btn-xs"><i class="fa fa-plus"></i>
+                  </button>
                </td>
                <td data-title="'操作'" width="80" class="text-center">
-                  <button title="编辑" data-ng-click="modify(user)" class="btn btn-warning btn-xs"><i class="fa fa-pencil"></i>
+                  <button title="编辑" data-ng-click="modifyDormitory(item.dormitory)" class="btn btn-warning btn-xs"><i class="fa fa-pencil"></i>
                   </button>
                </td>
             </tr>
@@ -81,6 +92,6 @@
    </div>
    <!-- 修改信息的弹窗-->
    <script type="text/ng-template" id="modifyDialog">
-      <div><legend><h3 class="mt0">修改宿舍信息</h3></legend><form method="get" action="/" class="form-horizontal"><div class="form-group"><label for="input-name" class="col-sm-2 control-label">地址</label><div class="col-sm-10"><input id="input-id-1" type="text" disabled="disabled" ng-model="modifiyingUser.name" class="form-control"/></div></div><div class="form-group"><label for="input-age" class="col-sm-2 control-label">宿舍号</label><div class="col-sm-10"><input id="input-id-1" type="text" ng-pattern="/^[0-9]+$/" ng-model="modifiyingUser.age" class="form-control"/></div></div><div class="form-group"><label for="input-age" class="col-sm-2 control-label">类型</label><div class="col-sm-10"><input id="input-id-1" type="text" ng-pattern="/^[0-9]+$/" ng-model="modifiyingUser.age" class="form-control"/></div></div><div class="form-group"><label for="input-money" class="col-sm-2 control-label">核定</label><div class="col-sm-10"><input id="input-id-1" type="number" ng-model="modifiyingUser.money" class="form-control"/></div></div><div class="form-group"><label for="input-money" class="col-sm-2 control-label">实际</label><div class="col-sm-10"><input id="input-id-1" type="number" ng-model="modifiyingUser.money" class="form-control"/></div></div></form><div class="row"><div class="container-fluid"><span class="pull-right"><button type="button" ng-click="cancel()" class="btn btn-default mr">取消</button><button type="button" ng-click="submitModify()" class="btn btn-warning">修改</button></span></div></div></div>
+      <div><legend><h3 class="mt0">修改宿舍信息</h3></legend><form method="get" action="/" class="form-horizontal"><div class="form-group"><label for="input-name" class="col-sm-2 control-label">地址</label><div class="col-sm-10"><input id="input-id-1" type="text" disabled="disabled" ng-model="dormitory.addressDetail" class="form-control"/></div></div><div class="form-group"><label for="input-age" class="col-sm-2 control-label">宿舍号</label><div class="col-sm-10"><input id="input-id-1" type="text" ng-pattern="/^[0-9]+$/" ng-model="dormitory.doorplate" class="form-control"/></div></div><div class="form-group"><label for="input-age" class="col-sm-2 control-label">类型</label><div class="col-sm-10"><input id="input-id-1" type="text" ng-pattern="/^[0-9]+$/" ng-model="dormitory.type" class="form-control"/></div></div><div class="form-group"><label for="input-money" class="col-sm-2 control-label">核定</label><div class="col-sm-10"><input id="input-id-1" type="number" ng-model="dormitory.capacityCnt" class="form-control"/></div></div><div class="form-group"><label for="input-money" class="col-sm-2 control-label">实际</label><div class="col-sm-10"><input id="input-id-1" type="number" ng-model="dormitory.occupiedCnt" class="form-control"/></div></div></form><div class="row"><div class="container-fluid"><span class="pull-right"><button type="button" ng-click="cancel()" class="btn btn-default mr">取消</button><button type="button" ng-click="submitModify()" class="btn btn-warning">修改</button></span></div></div></div>
    </script>
 </div>

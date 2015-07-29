@@ -14,20 +14,21 @@ script(type='text/ng-template', id="sidebar-renderer.html")
   nav.sidebar(sidebar="", sidebar-anyclick-close="")
     // START sidebar nav
     ul.nav
-      // START user info
-      li.has-user-block
-        div(collapse="userBlockVisible", ng-controller="UserBlockController")
-          .item.user-block
-            // User picture
-            .user-block-picture
-              .user-block-status
-                img.img-thumbnail.img-circle(ng-src="{{user.picture}}", alt="Avatar", width="60", height="60")
-                .circle.circle-success.circle-lg
-            // Name and Job
-            .user-block-info
-              span.user-block-name {{ 'sidebar.WELCOME' | translate }} {{user.name}}
-              span.user-block-role {{user.job}}
-      // END user info
+      //-
+        // START user info
+        li.has-user-block
+          div(collapse="userBlockVisible", ng-controller="UserBlockController")
+            .item.user-block
+              // User picture
+              .user-block-picture
+                .user-block-status
+                  img.img-thumbnail.img-circle(ng-src="{{user.picture}}", alt="Avatar", width="60", height="60")
+                  .circle.circle-success.circle-lg
+              // Name and Job
+              .user-block-info
+                span.user-block-name {{ 'sidebar.WELCOME' | translate }} {{user.name}}
+                span.user-block-role {{user.job}}
+        // END user info
 
       // Iterates over all sidebar items
       li(ng-class="getMenuItemPropClasses(item)", ng-repeat='item in menuItems', ng-init="pIndex = $index", ng-include="'sidebar-renderer.html'", ng-click="toggleCollapse(pIndex, true)")
