@@ -1,7 +1,19 @@
 div
   legend
-    h3.mt0 员工详情 - {{ employee.name }}
+    h3.mt0 员工迁入
   form.form-horizontal
+    .form-group
+      label.col-sm-12.text-center(for='input-typeTrans') 检索或选择迁入的员工...
+      .col-sm-12
+        ui-select.text-left(ng-model='selectedApplication', theme='bootstrap', ng-disabled='disabled')
+          ui-select-match(placeholder='输入员工的部分信息...') {{ $select.selected.employees[0].name }}
+          ui-select-choices(repeat='application in applications | filter: $select.search')
+            span(ng-bind-html='application.employees[0].name | highlight: $select.search')
+            | 身份证：
+            small(ng-bind-html='application.employees[0].idNum | highlight: $select.search')
+            | 所属中心：
+            small(ng-bind-html='application.employees[0].department | highlight: $select.search')
+  form.form-horizontal.form-validate(name="checkInForm", novalidate='', ng-show="selectedApplication")
     .form-group
       label.col-sm-2.control-label(for='input-name') 姓名
       .col-sm-4
@@ -25,9 +37,11 @@ div
       .col-sm-10
         input#input-capacityCnt.form-control(type='text', name="capacityCnt", ng-model="employee.spouseStatus", required='', ng-pattern="/^[0-9]+$/", disabled='')
     .row
-      .container-fluid 
-        .pull-left(style="margin-top: 6px;")
-          small 如需修改员工信息，请使用
-            a(href="#") 员工管理
-        .pull-right
-          button.btn.btn-default(type='button', ng-click='cancel()') 返回
+      .container-fluid
+        span.pull-right
+          button.btn.btn-default.mr(type='button', ng-click='cancel()') 取消
+          button.btn.btn-warning(type='submit', ng-click='submitModify()') 修改
+  .row(ng-hide="selectedApplication")
+      .container-fluid
+        span.pull-right
+          button.btn.btn-default.mr(type='button', ng-click='cancel()') 取消

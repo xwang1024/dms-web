@@ -58,11 +58,11 @@ h3 列表视图
                 input(type='checkbox', ng-model="checkboxes.items[item.dormitory.id]")
                 span.fa.fa-check
           td(data-title="'详细地址'") {{ item.dormitory.addressDetail }}
-          td.text-center(data-title="'类型'", sortable="'dormitory.type'", width="100") {{ item.dormitory.typeTrans }}
+          td.text-center(data-title="'类型'", sortable="'dormitory.type'", width="100") {{ item.dormitory.type }}
           td.text-center(data-title="'核定'", sortable="'dormitory.capacityCnt'", width="70") {{ item.dormitory.capacityCnt }}
           td.text-center(data-title="'实际'", sortable="'dormitory.occupiedCnt'", width="70") {{ item.dormitory.occupiedCnt }}
           td(data-title="'住户'")
-            button.btn.btn-primary.btn-xs(ng-repeat="employee in item.employees", ng-click="showEmployee(item)", style="margin-right:5px;min-width:55px;") {{ employee.name }}
+            button.btn.btn-primary.btn-xs(ng-repeat="employee in item.employees", ng-click="showEmployee(employee)", style="margin-right:5px;min-width:55px;") {{ employee.name }}
             button.btn.btn-green.btn-xs(title='迁入', data-ng-click='addHouseHolder(item)', ng-if="item.dormitory.capacityCnt - item.dormitory.occupiedCnt > 0")
               i.fa.fa-plus
           td.text-center(data-title="'操作'", width="80")

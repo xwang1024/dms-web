@@ -74,7 +74,7 @@ function ($stateProvider, $locationProvider, $urlRouterProvider, helper) {
         abstract: true,
         templateUrl: helper.basepath('app.html'),
         controller: 'AppController',
-        resolve: helper.resolveFor('fastclick', 'modernizr', 'icons', 'screenfull', 'animo', 'sparklines', 'slimscroll', 'classyloader', 'toaster', 'whirl')
+        resolve: helper.resolveFor('fastclick', 'modernizr', 'icons', 'screenfull', 'animo', 'sparklines', 'slimscroll', 'classyloader', 'toaster', 'whirl','ui.select')
     })
     // 个人中心
     .state('app.dashboard', {
@@ -1422,11 +1422,74 @@ App.controller('DormitoryListController', [
     // ===================================
 
     // ========== 表格内按钮 ==========
-    $scope.showEmployee = function($item) {
-        console.log($item);
+    $scope.showEmployee = function($employee) {
+        ShareService.setData(angular.copy($employee));
+
+        ngDialog.open({
+            template: 'app/views/dialogs/show-employee.html',
+
+            controller: function ($scope, ngDialog, ShareService) {
+                $scope.employee = ShareService.getData();
+                console.log($scope.employee);
+                $scope.cancel = function() {
+                    ngDialog.close();
+                }
+            }
+        });
     }
     $scope.addHouseHolder = function($item) {
-        console.log($item);
+        ShareService.setData(angular.copy($item));
+
+        ngDialog.open({
+            template: 'app/views/dialogs/check-in.html',
+
+            controller: function ($scope, ngDialog, ShareService) {
+                $scope.item = ShareService.getData();
+                $scope.selectedApplication = null;
+                console.log($scope.item);
+                $scope.applications = [{
+                    "id" : 1,
+                    "employees" : [{
+                        "id" : 1,
+                        "name" : "王婷",
+                        "gender" : "FEMAEL",
+                        "idNum" : "34262319900205659X",
+                        "department" : "幼儿园",
+                        "dutyDate" : "2015-07-07",
+                        "workCampus" : "鼓楼",
+                        "workLocationDetail" : "南京大学幼儿园",
+                        "spouseType" : "NONE",
+                        "outsideSpouse" : {}
+                    }],
+                    "date" : "2015-03-04",
+                    "type" : "GROUP_FEMALE",
+                    "content" : "申请理由1",
+                    "status" : "APPROVED"
+                },{
+                    "id" : 1,
+                    "employees" : [{
+                        "id" : 1,
+                        "name" : "夏娜",
+                        "gender" : "FEMAEL",
+                        "idNum" : "34262319940205659X",
+                        "department" : "幼儿园",
+                        "dutyDate" : "2015-07-07",
+                        "workCampus" : "鼓楼",
+                        "workLocationDetail" : "南京大学幼儿园",
+                        "spouseType" : "NONE",
+                        "outsideSpouse" : {}
+                    }],
+                    "date" : "2015-03-05",
+                    "type" : "GROUP_FEMALE",
+                    "content" : "申请理由2",
+                    "status" : "APPROVED"
+                }];
+                
+                $scope.cancel = function() {
+                    ngDialog.close();
+                }
+            }
+        });
     }
     $scope.modifyDormitory = function($dormitory) {
         ShareService.setData(angular.copy($dormitory));
@@ -1436,7 +1499,7 @@ App.controller('DormitoryListController', [
 
             controller: function ($scope, ngDialog, ShareService) {
                 $scope.dormitory = ShareService.getData();
-                $scope.dormitory.addressDetail = $scope.dormitory.campus + " - " + $scope.dormitory.address + " - " + $scope.dormitory.floor;
+                $scope.dormitoryTypes = ["集体宿舍 - 男", "集体宿舍 - 女"];
                 $scope.submitModify = function () {
                     console.log($scope.dormitory);
                     $scope.submitted = true;
@@ -1452,8 +1515,7 @@ App.controller('DormitoryListController', [
                     ngDialog.close();
                 }
 
-            }, 
-            data: $dormitory
+            }
         });
     }
     // ================================
@@ -7509,8 +7571,13 @@ App.directive('vectorMap', ['vectorMap', function(vectorMap){
 App.service('DormitoryService', ['$rootScope', '$q', '$http',  function($rootScope, $q, $http) {
 
   var url = "server/dormitory-list.json";
-  var trans = {
-    "GROUP_MALE" : "集体宿舍 - 男"
+  var preprocessDataMap = {
+    "GROUP_MALE" : "集体宿舍 - 男",
+    "MALE" : "男"
+  };
+  var postprocessDataMap = {
+    "集体宿舍 - 男" : "GROUP_MALE",
+    "男" : "MALE" 
   };
 
   this.queryData = function(callback) {
@@ -7519,10 +7586,13 @@ App.service('DormitoryService', ['$rootScope', '$q', '$http',  function($rootSco
 
   this.preprocessData = function(data) {
     angular.forEach(data, function(item) {
-        // 生成详细地址，保留原来的信息
-        item.dormitory.addressDetail = item.dormitory.campus + " - " + item.dormitory.address + " - " + item.dormitory.floor + " - " + item.dormitory.doorplate;
-        // 生成类型信息，保留原来的信息
-        item.dormitory.typeTrans = trans[item.dormitory.type];
+      // 生成详细地址，保留原来的信息
+      item.dormitory.addressDetail = item.dormitory.campus + " - " + item.dormitory.address + " - " + item.dormitory.floor + " - " + item.dormitory.doorplate;
+      // 生成类型信息，保留原来的信息
+      item.dormitory.type = preprocessDataMap[item.dormitory.type];
+      angular.forEach(item.employees, function(employee) {
+        employee.gender = preprocessDataMap[employee.gender];
+      });
     });
     return data;
   }

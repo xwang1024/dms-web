@@ -1,8 +1,23 @@
 <div>
    <legend>
-      <h3 class="mt0">员工详情 - {{ employee.name }}</h3>
+      <h3 class="mt0">员工迁入</h3>
    </legend>
    <form class="form-horizontal">
+      <div class="form-group">
+         <label for="input-typeTrans" class="col-sm-12 text-center">检索或选择迁入的员工...</label>
+         <div class="col-sm-12">
+            <ui-select ng-model="selectedApplication" theme="bootstrap" ng-disabled="disabled" class="text-left">
+               <ui-select-match placeholder="输入员工的部分信息...">{{ $select.selected.employees[0].name }}</ui-select-match>
+               <ui-select-choices repeat="application in applications | filter: $select.search">
+                  <span ng-bind-html="application.employees[0].name | highlight: $select.search"></span>身份证：
+                  <small ng-bind-html="application.employees[0].idNum | highlight: $select.search"></small>所属中心：
+                  <small ng-bind-html="application.employees[0].department | highlight: $select.search"></small>
+               </ui-select-choices>
+            </ui-select>
+         </div>
+      </div>
+   </form>
+   <form name="checkInForm" novalidate="" ng-show="selectedApplication" class="form-horizontal form-validate">
       <div class="form-group">
          <label for="input-name" class="col-sm-2 control-label">姓名</label>
          <div class="col-sm-4">
@@ -37,14 +52,18 @@
       </div>
       <div class="row">
          <div class="container-fluid">
-            <div style="margin-top: 6px;" class="pull-left">
-               <small>如需修改员工信息，请使用<a href="#">员工管理</a>
-               </small>
-            </div>
-            <div class="pull-right">
-               <button type="button" ng-click="cancel()" class="btn btn-default">返回</button>
-            </div>
+            <span class="pull-right">
+               <button type="button" ng-click="cancel()" class="btn btn-default mr">取消</button>
+               <button type="submit" ng-click="submitModify()" class="btn btn-warning">修改</button>
+            </span>
          </div>
       </div>
    </form>
+   <div ng-hide="selectedApplication" class="row">
+      <div class="container-fluid">
+         <span class="pull-right">
+            <button type="button" ng-click="cancel()" class="btn btn-default mr">取消</button>
+         </span>
+      </div>
+   </div>
 </div>

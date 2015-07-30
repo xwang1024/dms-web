@@ -137,11 +137,74 @@ App.controller('DormitoryListController', [
     // ===================================
 
     // ========== 表格内按钮 ==========
-    $scope.showEmployee = function($item) {
-        console.log($item);
+    $scope.showEmployee = function($employee) {
+        ShareService.setData(angular.copy($employee));
+
+        ngDialog.open({
+            template: 'app/views/dialogs/show-employee.html',
+
+            controller: function ($scope, ngDialog, ShareService) {
+                $scope.employee = ShareService.getData();
+                console.log($scope.employee);
+                $scope.cancel = function() {
+                    ngDialog.close();
+                }
+            }
+        });
     }
     $scope.addHouseHolder = function($item) {
-        console.log($item);
+        ShareService.setData(angular.copy($item));
+
+        ngDialog.open({
+            template: 'app/views/dialogs/check-in.html',
+
+            controller: function ($scope, ngDialog, ShareService) {
+                $scope.item = ShareService.getData();
+                $scope.selectedApplication = null;
+                console.log($scope.item);
+                $scope.applications = [{
+                    "id" : 1,
+                    "employees" : [{
+                        "id" : 1,
+                        "name" : "王婷",
+                        "gender" : "FEMAEL",
+                        "idNum" : "34262319900205659X",
+                        "department" : "幼儿园",
+                        "dutyDate" : "2015-07-07",
+                        "workCampus" : "鼓楼",
+                        "workLocationDetail" : "南京大学幼儿园",
+                        "spouseType" : "NONE",
+                        "outsideSpouse" : {}
+                    }],
+                    "date" : "2015-03-04",
+                    "type" : "GROUP_FEMALE",
+                    "content" : "申请理由1",
+                    "status" : "APPROVED"
+                },{
+                    "id" : 1,
+                    "employees" : [{
+                        "id" : 1,
+                        "name" : "夏娜",
+                        "gender" : "FEMAEL",
+                        "idNum" : "34262319940205659X",
+                        "department" : "幼儿园",
+                        "dutyDate" : "2015-07-07",
+                        "workCampus" : "鼓楼",
+                        "workLocationDetail" : "南京大学幼儿园",
+                        "spouseType" : "NONE",
+                        "outsideSpouse" : {}
+                    }],
+                    "date" : "2015-03-05",
+                    "type" : "GROUP_FEMALE",
+                    "content" : "申请理由2",
+                    "status" : "APPROVED"
+                }];
+                
+                $scope.cancel = function() {
+                    ngDialog.close();
+                }
+            }
+        });
     }
     $scope.modifyDormitory = function($dormitory) {
         ShareService.setData(angular.copy($dormitory));
@@ -151,7 +214,7 @@ App.controller('DormitoryListController', [
 
             controller: function ($scope, ngDialog, ShareService) {
                 $scope.dormitory = ShareService.getData();
-                $scope.dormitory.addressDetail = $scope.dormitory.campus + " - " + $scope.dormitory.address + " - " + $scope.dormitory.floor;
+                $scope.dormitoryTypes = ["集体宿舍 - 男", "集体宿舍 - 女"];
                 $scope.submitModify = function () {
                     console.log($scope.dormitory);
                     $scope.submitted = true;
@@ -167,8 +230,7 @@ App.controller('DormitoryListController', [
                     ngDialog.close();
                 }
 
-            }, 
-            data: $dormitory
+            }
         });
     }
     // ================================
