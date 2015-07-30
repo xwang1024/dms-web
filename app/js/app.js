@@ -1290,67 +1290,8 @@ App.controller('DormitoryListController', [
     'use strict';
     var vm = this;
     // ========== 数据区 ==========
-    var trans = {
-      "GROUP_MALE" : "集体宿舍 - 男"
-    };
-    var data = [{
-        "dormitory" : {
-            "id" : 10001,
-            "campus" : "鼓楼",
-            "address" : "陶北新村",
-            "floor" : "1层",
-            "doorplate" : "101",
-            "type" : "GROUP_MALE",
-            "capacityCnt" : 5,
-            "occupiedCnt" : 2
-        },
-        "employees" : [{
-            "id" : 20001,
-            "name" : "胡志刚",
-            "gender" : "MALE",
-            "idNum" : "342623196505063528",
-            "department" : "运输",
-            "dutyDate" : "2012-02-04",
-            "workCampus" : "鼓楼",
-            "workLocationDetail" : "校车管理中心",
-            "spouseType" : "NONE",
-            "outsideSpouse" : {}
-        },{
-            "id" : 20002,
-            "name" : "王富贵",
-            "gender" : "MALE",
-            "idNum" : "342623196908163588",
-            "department" : "物业",
-            "dutyDate" : "2015-03-07",
-            "workCampus" : "鼓楼",
-            "workLocationDetail" : "教学楼",
-            "spouseType" : "NONE",
-            "outsideSpouse" : {}
-        }]
-    },{
-        "dormitory" : {
-            "id" : 10002,
-            "campus" : "鼓楼",
-            "address" : "陶北新村",
-            "floor" : "1层",
-            "doorplate" : "102",
-            "type" : "GROUP_MALE",
-            "capacityCnt" : 4,
-            "occupiedCnt" : 1
-        },
-        "employees" : [{
-            "id" : 20003,
-            "name" : "胡志",
-            "gender" : "MALE",
-            "idNum" : "342623198805063538",
-            "department" : "幼儿园",
-            "dutyDate" : "2012-02-14",
-            "workCampus" : "鼓楼",
-            "workLocationDetail" : "南大幼儿园",
-            "spouseType" : "NONE",
-            "outsideSpouse" : {}
-        }]
-    }];
+    
+    var data = null;
     $scope.addressTree = {};
 
     // -------- 搜索关键词 --------
@@ -1360,22 +1301,37 @@ App.controller('DormitoryListController', [
     $scope.searchKeywords = "";
     // ----------------------------
     // ============================
-    var Api = $resource('server/dormitory-list.json');
+    var showTableData = function($defer, params) {
+        var searchedData = searchData(data);
+        var orderedData = params.sorting() ? $filter('orderBy')(searchedData, params.orderBy()) : searchedData;
+        params.total(orderedData.length);
+        $defer.resolve($scope.dormitories = orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count()));
+    }
+
     vm.tableParams = new ngTableParams({
         page: 1,
         count: 10
     }, {
         total: 0,
-        getData: function($defer, params, Api) {
-            angular.forEach(data, function(item) {
-                item.dormitory.addressDetail = item.dormitory.campus + " - " + item.dormitory.address + " - " + item.dormitory.floor + " - " + item.dormitory.doorplate;
-                item.dormitory.typeTrans = trans[item.dormitory.type];
-                console.log(item.dormitory.type);
-            });
-            var searchedData = searchData(data);
-            var orderedData = params.sorting() ? $filter('orderBy')(searchedData, params.orderBy()) : searchedData;
-            params.total(orderedData.length);
-            $defer.resolve($scope.dormitories = orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count()));
+        getData: function($defer, params) {
+            if(!data) {
+                DormitoryService.queryData({
+                    success : function(response) {
+                        if(response.status) {
+                            data = DormitoryService.preprocessData(response.result);
+                            showTableData($defer, params);
+                        } else {
+                            alert("列表获取失败");
+                        }
+                        console.log("success", data);
+                    },
+                    error : function(data, status, headers, config) {
+                        alert("GET Error");
+                    }
+                });
+            } else {
+                showTableData($defer, params);
+            }            
         }
     });
 
@@ -1391,15 +1347,18 @@ App.controller('DormitoryListController', [
         $scope.campusOpen = false;
         $scope.selectedAddress = "";
         $scope.selectedFloor = "";
+        vm.tableParams.reload();
     }
     $scope.selectAddress = function(address) {
         $scope.selectedAddress = address;
         $scope.addressOpen = false;
         $scope.selectedFloor = "";
+        vm.tableParams.reload();
     }
     $scope.selectFloor = function(floor) {
         $scope.selectedFloor = floor;
         $scope.floorOpen = false;
+        vm.tableParams.reload();
     }
     // ==============================
 
@@ -1407,8 +1366,8 @@ App.controller('DormitoryListController', [
     var initAddressTree = function() {
         var path = "server/address-tree.json";
         $http.get(path)
-        .success(function(items) {
-            $scope.addressTree = items;
+        .success(function(response) {
+            $scope.addressTree = response;
         })
         .error(function(data, status, headers, config) {
           alert("Address Tree init failure!");
@@ -1416,31 +1375,18 @@ App.controller('DormitoryListController', [
     }
     initAddressTree();
 
-    var queryData = function() {
-        $scope.operating = true;
-        $http.get("server/dormitory-list.json")
-        .success(function(ddd) {
-            // console.log(resData);
-            if(resData.status) {
-                vm.data = resData.result;
-            } else {
-                alert("2");
-            }
-        })
-        .error(function(data, status, headers, config) {
-          alert("1");
-        });
-    };
-
     var searchData = function() {
         var filterData = data;
         if($scope.searchKeywords) {
             var keywords = $scope.searchKeywords.split(" ");
             var i;
             for(i in keywords) {
-                filterData = $filter('filter')(filterData,keywords[i]);
+                filterData = $filter('filter')(filterData, keywords[i]);
             }
         }
+        if($scope.selectedCampus)filterData = $filter('filter')(filterData, { dormitory : { campus : $scope.selectedCampus}});
+        if($scope.selectedAddress) filterData = $filter('filter')(filterData, { dormitory : { address : $scope.selectedAddress}});
+        if($scope.selectedFloor) filterData = $filter('filter')(filterData, { dormitory : { floor : $scope.selectedFloor}});
         return filterData;
     }
     // ======================================
@@ -7553,39 +7499,27 @@ App.directive('vectorMap', ['vectorMap', function(vectorMap){
   };
 
 }]);
-App.service('DormitoryService', function() {
+App.service('DormitoryService', ['$rootScope', '$q', '$http',  function($rootScope, $q, $http) {
 
-  var TableData = {
-    cache: null,
-    getData: function($defer, params, api){
-      // if no cache, request data and filter
-      if ( ! TableData.cache ) {
-        if ( api ) {
-          api.get(function(data){
-            TableData.cache = data;
-            filterdata($defer, params);
-          });
-        }
-      }
-      else {
-        filterdata($defer, params);
-      }
-      
-      function filterdata($defer, params) {
-        var from = (params.page() - 1) * params.count();
-        var to = params.page() * params.count();
-        var filteredData = TableData.cache.result.slice(from, to);
-
-        params.total(TableData.cache.total);
-        $defer.resolve(filteredData);
-      }
-
-    }
+  var url = "server/dormitory-list.json";
+  var trans = {
+    "GROUP_MALE" : "集体宿舍 - 男"
   };
-  
-  return TableData;
 
-});
+  this.queryData = function(callback) {
+    $http.get(url).success(callback.success).error(callback.error);
+  }
+
+  this.preprocessData = function(data) {
+    angular.forEach(data, function(item) {
+        // 生成详细地址，保留原来的信息
+        item.dormitory.addressDetail = item.dormitory.campus + " - " + item.dormitory.address + " - " + item.dormitory.floor + " - " + item.dormitory.doorplate;
+        // 生成类型信息，保留原来的信息
+        item.dormitory.typeTrans = trans[item.dormitory.type];
+    });
+    return data;
+  }
+}]);
 
 App.service('ShareService', function() {
   var data;

@@ -1,33 +1,21 @@
-App.service('DormitoryService', function() {
+App.service('DormitoryService', ['$rootScope', '$q', '$http',  function($rootScope, $q, $http) {
 
-  var TableData = {
-    cache: null,
-    getData: function($defer, params, api){
-      // if no cache, request data and filter
-      if ( ! TableData.cache ) {
-        if ( api ) {
-          api.get(function(data){
-            TableData.cache = data;
-            filterdata($defer, params);
-          });
-        }
-      }
-      else {
-        filterdata($defer, params);
-      }
-      
-      function filterdata($defer, params) {
-        var from = (params.page() - 1) * params.count();
-        var to = params.page() * params.count();
-        var filteredData = TableData.cache.result.slice(from, to);
-
-        params.total(TableData.cache.total);
-        $defer.resolve(filteredData);
-      }
-
-    }
+  var url = "server/dormitory-list.json";
+  var trans = {
+    "GROUP_MALE" : "集体宿舍 - 男"
   };
-  
-  return TableData;
 
-});
+  this.queryData = function(callback) {
+    $http.get(url).success(callback.success).error(callback.error);
+  }
+
+  this.preprocessData = function(data) {
+    angular.forEach(data, function(item) {
+        // 生成详细地址，保留原来的信息
+        item.dormitory.addressDetail = item.dormitory.campus + " - " + item.dormitory.address + " - " + item.dormitory.floor + " - " + item.dormitory.doorplate;
+        // 生成类型信息，保留原来的信息
+        item.dormitory.typeTrans = trans[item.dormitory.type];
+    });
+    return data;
+  }
+}]);
