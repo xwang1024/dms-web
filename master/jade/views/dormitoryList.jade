@@ -45,7 +45,7 @@ h3 列表视图
               a(href='#', ng-click='selectFloor(key)', ng-bind="key")
         // END button group
         input.form-control.input-sm.form-horizontal(type='text', ng-model="searchKeywords", placeholder='表格搜索...')
-        button.btn.btn-info.btn-sm(ng-click='table.tableParams.sorting({})') 复位
+        button.btn.btn-info.btn-sm(ng-click='searchKeywords=""; selectCampus("")') 复位
       .panel-title 宿舍列表
         
     //- ng-table指明了使用什么样的参数来创建表格，export-csv是插件ng-table-export的功能，仅能导出为csv
@@ -77,36 +77,3 @@ h3 列表视图
         label
           input(type="checkbox", ng-model="checkboxes.checked", id="select_all", name="filter-checkbox", value="")
           span.fa.fa-check
-  
-  // 修改信息的弹窗
-  script(type="text/ng-template", id="modifyDialog")
-    div
-      legend
-        h3.mt0 修改宿舍信息
-      form.form-horizontal(method='get', action="/")
-        .form-group
-          label.col-sm-2.control-label(for='input-name') 地址
-          .col-sm-10
-            input#input-id-1.form-control(type='text', disabled, ng-model="dormitory.addressDetail")
-        .form-group
-          label.col-sm-2.control-label(for='input-age') 宿舍号
-          .col-sm-10
-            input#input-id-1.form-control(type='text', ng-pattern="/^[0-9]+$/", ng-model="dormitory.doorplate")
-        .form-group
-          label.col-sm-2.control-label(for='input-age') 类型
-          .col-sm-10
-            input#input-id-1.form-control(type='text', ng-pattern="/^[0-9]+$/", ng-model="dormitory.typeTrans")
-        .form-group
-          label.col-sm-2.control-label(for='input-money') 核定
-          .col-sm-10
-            input#input-id-1.form-control(type='number', ng-model="dormitory.capacityCnt")
-        .form-group
-          label.col-sm-2.control-label(for='input-money') 实际
-          .col-sm-10
-            input#input-id-1.form-control(type='number', ng-model="dormitory.occupiedCnt")
-      .row
-        .container-fluid
-          span.pull-right
-            button.btn.btn-default.mr(type='button', ng-click='cancel()') 取消
-            button.btn.btn-warning(type='button', ng-click='submitModify()') 修改
-          

@@ -1,0 +1,29 @@
+div
+  legend
+    h3.mt0 修改宿舍信息
+  form.form-horizontal.form-validate(name="modifyDormitoryForm", novalidate='')
+    .form-group
+      label.col-sm-2.control-label(for='input-name') 地址
+      .col-sm-10
+        input#input-id-1.form-control(type='text', name="address", ng-model="dormitory.addressDetail", required='', disabled='')
+    .form-group
+      label.col-sm-2.control-label(for='input-age') 宿舍号
+      .col-sm-10
+        input#input-id-1.form-control(type='text', name="doorplate", ng-model="dormitory.doorplate", required='')
+    .form-group
+      label.col-sm-2.control-label(for='input-age') 类型
+      .col-sm-10
+        input#input-id-1.form-control(type='text', name="type", ng-model="dormitory.typeTrans", required='')
+    .form-group
+      label.col-sm-2.control-label(for='input-money') 核定
+      .col-sm-10
+        input#input-id-1.form-control(type='text', name="capacityCnt", ng-model="dormitory.capacityCnt", required='', ng-pattern="/^[0-9]+$/")
+    .form-group
+      label.col-sm-2.control-label(for='input-money') 实际
+      .col-sm-10
+        input#input-id-1.form-control(type='text', name="occupiedCnt", ng-model="dormitory.occupiedCnt", required='', ng-pattern="/^[0-9]+$/")
+  .row
+    .container-fluid
+      span.pull-right
+        button.btn.btn-default.mr(type='button', ng-click='cancel()') 取消
+        button.btn.btn-warning(type='submit', ng-click='submitModify()') 修改

@@ -28,6 +28,7 @@ App.controller('DormitoryListController', [
         count: 10
     }, {
         total: 0,
+        counts: [10, 20, 50],
         getData: function($defer, params) {
             if(!data) {
                 DormitoryService.queryData({
@@ -146,14 +147,20 @@ App.controller('DormitoryListController', [
         ShareService.setData(angular.copy($dormitory));
 
         ngDialog.open({
-            template: 'modifyDialog',
+            template: 'app/views/dialogs/edit-dormitory.html',
 
             controller: function ($scope, ngDialog, ShareService) {
                 $scope.dormitory = ShareService.getData();
                 $scope.dormitory.addressDetail = $scope.dormitory.campus + " - " + $scope.dormitory.address + " - " + $scope.dormitory.floor;
-
                 $scope.submitModify = function () {
                     console.log($scope.dormitory);
+                    $scope.submitted = true;
+                    if ($scope.modifyDormitoryForm.$valid) {
+                        console.log('Submitted!!');
+                    } else {
+                        console.log('Not valid!!');
+                        return false;
+                    }
                 };
 
                 $scope.cancel = function() {
