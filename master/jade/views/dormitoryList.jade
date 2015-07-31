@@ -57,8 +57,8 @@ h3 列表视图
               label
                 input(type='checkbox', ng-model="checkboxes.items[item.dormitory.id]")
                 span.fa.fa-check
-          td(data-title="'详细地址'") {{ item.dormitory.addressDetail }}
-          td.text-center(data-title="'类型'", sortable="'dormitory.type'", width="100") {{ item.dormitory.type }}
+          td(data-title="'详细地址'", sortable="'dormitory.addressDetailCN'") {{ item.dormitory.addressDetailCN }}
+          td.text-center(data-title="'类型'", sortable="'dormitory.typeCN'", width="100") {{ item.dormitory.typeCN }}
           td.text-center(data-title="'核定'", sortable="'dormitory.capacityCnt'", width="70") {{ item.dormitory.capacityCnt }}
           td.text-center(data-title="'实际'", sortable="'dormitory.occupiedCnt'", width="70") {{ item.dormitory.occupiedCnt }}
           td(data-title="'住户'")

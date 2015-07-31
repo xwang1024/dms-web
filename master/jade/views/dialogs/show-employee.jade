@@ -8,7 +8,7 @@ div
         input#input-name.form-control(type='text', name="name", ng-model="employee.name", required='', disabled='')
       label.col-sm-2.control-label(for='input-gender') 性别
       .col-sm-4
-        input#input-gender.form-control(type='text', name="gender", ng-model="employee.gender", required='', disabled='')
+        input#input-gender.form-control(type='text', name="gender", ng-model="employee.genderCN", required='', disabled='')
     .form-group
       label.col-sm-2.control-label(for='input-idNum') 身份证
       .col-sm-10
@@ -20,10 +20,30 @@ div
       label.col-sm-2.control-label(for='input-dutyDate') 入职
       .col-sm-4
         input#input-dutyDate.form-control(type='text', name="dutyDate", ng-model="employee.dutyDate", required='', disabled='')
-    .form-group
-      label.col-sm-2.control-label(for='input-capacityCnt') 配偶
+    //- 配偶需要分情况组织界面
+    h3 配偶情况
+    hr
+    //- 没有配偶或集团员工
+    .form-group(ng-if='employee.spouseType=="NONE"')
+      label.col-sm-2.control-label(for='input-capacityCnt') 类型
       .col-sm-10
-        input#input-capacityCnt.form-control(type='text', name="capacityCnt", ng-model="employee.spouseStatus", required='', ng-pattern="/^[0-9]+$/", disabled='')
+        input#input-capacityCnt.form-control(type='text', name="capacityCnt", ng-model="employee.spouseTypeCN", required='',disabled='')
+    //- 校外配偶
+    .form-group(ng-if='employee.spouseType=="OUTER"')
+      label.col-sm-2.control-label(for='input-capacityCnt') 姓名
+      .col-sm-4
+        input#input-capacityCnt.form-control(type='text', name="capacityCnt", ng-model="employee.outsideSpouse.name", required='',disabled='')
+      label.col-sm-2.control-label(for='input-capacityCnt') 性别
+      .col-sm-4
+        input#input-capacityCnt.form-control(type='text', name="capacityCnt", ng-model="employee.spouseTypeCN.genderCN", required='',disabled='')
+    .form-group(ng-if='employee.spouseType=="OUTER"')
+      label.col-sm-2.control-label(for='input-capacityCnt') 身份证
+      .col-sm-10
+        input#input-capacityCnt.form-control(type='text', name="capacityCnt", ng-model="employee.spouseTypeCN.idNum", required='',disabled='')
+    .form-group(ng-if='employee.spouseType=="OUTER"')
+      label.col-sm-2.control-label(for='input-capacityCnt') 单位
+      .col-sm-10
+        input#input-capacityCnt.form-control(type='text', name="capacityCnt", ng-model="employee.spouseTypeCN.workLocationDetail", required='',disabled='')
     .row
       .container-fluid 
         .pull-left(style="margin-top: 6px;")

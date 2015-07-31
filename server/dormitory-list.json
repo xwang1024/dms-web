@@ -1,64 +1,272 @@
 {
-    "status" : true,
-    "message" : "",
-    "count" : 2,
-    "result" : [{
-		"dormitory" : {
-			"id" : 10001,
-			"campus" : "鼓楼",
-			"address" : "陶北新村",
-		    "floor" : "1层",
-		    "doorplate" : "101",
-		    "type" : "GROUP_MALE",
-		    "capacityCnt" : 5,
-		    "occupiedCnt" : 2
+	"status":true,
+	"message":"",
+	"count":6,
+	"result":[
+		{
+			"dormitory":{
+			"id":1,
+			"campus":"仙林",
+			"address":"1幢",
+			"floor":"1",
+			"doorplate":"1A116",
+			"type":"GROUP_MALE",
+			"capacityCnt":6,
+			"occupieCnt":2
+			},
+			"employees":[
+			{
+				"id":100,
+				"name":"张三",
+				"gender":"MALE",
+				"idNum":"32028114210542394",
+				"department":"运输",
+				"dutyDate":"2014-10-10",
+				"workLocationDetail":"运输部",
+				"spouseType":"NONE",
+				"outsideSpouse" : {
+        		"name" : "",
+        		"gender":"",
+        		"idNum" : "",
+        		"workLocationDetail" : ""
+   				 }
+			},{
+				"id":101,
+				"name":"李四",
+				"gender":"MALE",
+				"idNum":"32028114210546433",
+				"department":"运输",
+				"dutyDate":"2014-6-22",
+				"workLocationDetail":"运输部",
+				"spouseType":"NONE",
+				"outsideSpouse" : {
+        		"name" : "",
+        		"gender":"",
+        		"idNum" : "",
+        		"workLocationDetail" : ""
+   				 }
+			}
+			]
 		},
-		"employees" : [{
-			"id" : 20001,
-			"name" : "胡志刚",
-		    "gender" : "MALE",
-		    "idNum" : "342623196505063528",
-		    "department" : "运输",
-		    "dutyDate" : "2012-02-04",
-		    "workCampus" : "鼓楼",
-		    "workLocationDetail" : "校车管理中心",
-		    "spouseType" : "NONE",
-		    "outsideSpouse" : {}
-		},{
-			"id" : 20002,
-			"name" : "王富贵",
-		    "gender" : "MALE",
-		    "idNum" : "342623196908163588",
-		    "department" : "物业",
-		    "dutyDate" : "2015-03-07",
-		    "workCampus" : "鼓楼",
-		    "workLocationDetail" : "教学楼",
-		    "spouseType" : "NONE",
-		    "outsideSpouse" : {}
-		}]
-	},{
-		"dormitory" : {
-			"id" : 10002,
-			"campus" : "鼓楼",
-			"address" : "陶北新村",
-		    "floor" : "1层",
-		    "doorplate" : "102",
-		    "type" : "GROUP_MALE",
-		    "capacityCnt" : 4,
-		    "occupiedCnt" : 1
-		},
-		"employees" : [{
-			"id" : 20003,
-			"name" : "胡志",
-		    "gender" : "MALE",
-		    "idNum" : "342623198805063538",
-		    "department" : "幼儿园",
-		    "dutyDate" : "2012-02-14",
-		    "workCampus" : "鼓楼",
-		    "workLocationDetail" : "南大幼儿园",
-		    "spouseType" : "NONE",
-		    "outsideSpouse" : {}
-		}]
-	}]
-}
 
+
+		{
+			"dormitory":{
+			"id":2,
+			"campus":"仙林",
+			"address":"2幢",
+			"floor":"1",
+			"doorplate":"2B111",
+			"type":"GROUP_FEMALE",
+			"capacityCnt":6,
+			"occupieCnt":1
+			},
+			"employees":[
+			{
+				"id":200,
+				"name":"测试女一",
+				"gender":"FEMALE",
+				"idNum":"32028234210541232",
+				"department":"运输",
+				"dutyDate":"2014-2-21",
+				"workLocationDetail":"",
+				"spouseType":"NONE",
+				"outsideSpouse" : {
+        		"name" : "",
+        		"gender":"",
+        		"idNum" : "",
+        		"workLocationDetail" : ""
+   				 }
+			}
+			
+			]
+		},
+
+
+		{
+			"dormitory":{
+			"id":3,
+			"campus":"仙林",
+			"address":"3幢",
+			"floor":"1",
+			"doorplate":"3B115",
+			"type":"COUPLE",
+			"capacityCnt":2,
+			"occupieCnt":2
+			},
+			"employees":[
+			{
+				"id":300,
+				"name":"测试夫妻男一",
+				"gender":"MALE",
+				"idNum":"32028234276541232",
+				"department":"接待",
+				"dutyDate":"2014-2-23",
+				"workLocationDetail":"",
+				"spouseType":"NONE",
+				"outsideSpouse" : {
+	        		"name" : "",
+	        		"gender":"",
+	        		"idNum" : "",
+	        		"workLocationDetail" : ""
+   				 }
+			},{
+				"id":301,
+				"name":"测试夫妻女一",
+				"gender":"FEMALE",
+				"idNum":"32025434210540385",
+				"department":"接待",
+				"dutyDate":"2014-1-5",
+				"workLocationDetail":"",
+				"spouseType":"NONE",
+				"outsideSpouse" : {
+        		"name" : "",
+        		"gender":"",
+        		"idNum" : "",
+        		"workLocationDetail" : ""
+   				 }
+			}
+			]
+		},
+
+
+		{
+			"dormitory":{
+			"id":4,
+			"campus":"鼓楼",
+			"address":"东苑",
+			"floor":"1",
+			"doorplate":"104",
+			"type":"GROUP_MALE",
+			"capacityCnt":8,
+			"occupieCnt":2
+			},
+			"employees":[
+						
+			{
+				"id":102,
+				"name":"王五",
+				"gender":"MALE",
+				"idNum":"32029834280540385",
+				"department":"膳食",
+				"dutyDate":"2014-5-12",
+				"workLocationDetail":"",
+				"spouseType":"NONE",
+				"outsideSpouse" : {
+        		"name" : "",
+        		"gender":"",
+        		"idNum" : "",
+        		"workLocationDetail" : ""
+   				 }
+			},{
+				"id":103,
+				"name":"王七",
+				"gender":"MALE",
+				"idNum":"320282123416543232",
+				"department":"膳食",
+				"dutyDate":"2013-1-17",
+				"workLocationDetail":"",
+				"spouseType":"NONE",
+				"outsideSpouse" : {
+        		"name" : "",
+        		"gender":"",
+        		"idNum" : "",
+        		"workLocationDetail" : ""
+   				 }
+			}
+			]
+		},{
+			"dormitory":{
+			"id":5,
+			"campus":"鼓楼",
+			"address":"陶谷新村",
+			"floor":"2",
+			"doorplate":"7",
+			"type":"COUPLE",
+			"capacityCnt":2,
+			"occupieCnt":2
+			},
+			"employees":[
+						
+			{
+				"id":302,
+				"name":"测试夫妻男二",
+				"gender":"MALE",
+				"idNum":"32028119980540385",
+				"department":"膳食",
+				"dutyDate":"2014-5-12",
+				"workLocationDetail":"",
+				"spouseType":"FEMALE",
+				"outsideSpouse" : {
+        		"name" : "测试夫妻女二",
+        		"gender":"FEMALE",
+        		"idNum" : "320282123481193232",
+        		"workLocationDetail" : ""
+   				 }
+			}
+
+			]
+		},{
+			"dormitory":{
+			"id":6,
+			"campus":"鼓楼",
+			"address":"教超",
+			"floor":"2",
+			"doorplate":"223",
+			"type":"UNKNOWN",
+			"capacityCnt":6,
+			"occupieCnt":3
+			},
+			"employees":[
+			{
+				"id":106,
+				"name":"王大锤",
+				"gender":"MALE",
+				"idNum":"320281112342542394",
+				"department":"运输",
+				"dutyDate":"2014-10-3",
+				"workLocationDetail":"运输部",
+				"spouseType":"NONE",
+				"outsideSpouse" : {
+        		"name" : "",
+        		"gender":"",
+        		"idNum" : "",
+        		"workLocationDetail" : ""
+   				 }
+			},{
+				"id":107,
+				"name":"朱三",
+				"gender":"MALE",
+				"idNum":"32028114210546433",
+				"department":"运输",
+				"dutyDate":"2014-3-2",
+				"workLocationDetail":"运输部",
+				"spouseType":"NONE",
+				"outsideSpouse" : {
+        		"name" : "",
+        		"gender":"",
+        		"idNum" : "",
+        		"workLocationDetail" : ""
+   				 }
+			},{
+				"id":108,
+				"name":"亚索",
+				"gender":"MALE",
+				"idNum":"320212314210546433",
+				"department":"运输",
+				"dutyDate":"2014-2-9",
+				"workLocationDetail":"运输部",
+				"spouseType":"NONE",
+				"outsideSpouse" : {
+        		"name" : "",
+        		"gender":"",
+        		"idNum" : "",
+        		"workLocationDetail" : ""
+   				 }
+			}
+
+			]
+		}
+
+	]
+}

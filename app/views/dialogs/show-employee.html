@@ -10,7 +10,7 @@
          </div>
          <label for="input-gender" class="col-sm-2 control-label">性别</label>
          <div class="col-sm-4">
-            <input id="input-gender" type="text" name="gender" ng-model="employee.gender" required="" disabled="" class="form-control" />
+            <input id="input-gender" type="text" name="gender" ng-model="employee.genderCN" required="" disabled="" class="form-control" />
          </div>
       </div>
       <div class="form-group">
@@ -29,10 +29,34 @@
             <input id="input-dutyDate" type="text" name="dutyDate" ng-model="employee.dutyDate" required="" disabled="" class="form-control" />
          </div>
       </div>
-      <div class="form-group">
-         <label for="input-capacityCnt" class="col-sm-2 control-label">配偶</label>
+      <h3>配偶情况</h3>
+      <hr/>
+      <div ng-if="employee.spouseType==&quot;NONE&quot;" class="form-group">
+         <label for="input-capacityCnt" class="col-sm-2 control-label">类型</label>
          <div class="col-sm-10">
-            <input id="input-capacityCnt" type="text" name="capacityCnt" ng-model="employee.spouseStatus" required="" ng-pattern="/^[0-9]+$/" disabled="" class="form-control" />
+            <input id="input-capacityCnt" type="text" name="capacityCnt" ng-model="employee.spouseTypeCN" required="" disabled="" class="form-control" />
+         </div>
+      </div>
+      <div ng-if="employee.spouseType==&quot;OUTER&quot;" class="form-group">
+         <label for="input-capacityCnt" class="col-sm-2 control-label">姓名</label>
+         <div class="col-sm-4">
+            <input id="input-capacityCnt" type="text" name="capacityCnt" ng-model="employee.outsideSpouse.name" required="" disabled="" class="form-control" />
+         </div>
+         <label for="input-capacityCnt" class="col-sm-2 control-label">性别</label>
+         <div class="col-sm-4">
+            <input id="input-capacityCnt" type="text" name="capacityCnt" ng-model="employee.spouseTypeCN.genderCN" required="" disabled="" class="form-control" />
+         </div>
+      </div>
+      <div ng-if="employee.spouseType==&quot;OUTER&quot;" class="form-group">
+         <label for="input-capacityCnt" class="col-sm-2 control-label">身份证</label>
+         <div class="col-sm-10">
+            <input id="input-capacityCnt" type="text" name="capacityCnt" ng-model="employee.spouseTypeCN.idNum" required="" disabled="" class="form-control" />
+         </div>
+      </div>
+      <div ng-if="employee.spouseType==&quot;OUTER&quot;" class="form-group">
+         <label for="input-capacityCnt" class="col-sm-2 control-label">单位</label>
+         <div class="col-sm-10">
+            <input id="input-capacityCnt" type="text" name="capacityCnt" ng-model="employee.spouseTypeCN.workLocationDetail" required="" disabled="" class="form-control" />
          </div>
       </div>
       <div class="row">

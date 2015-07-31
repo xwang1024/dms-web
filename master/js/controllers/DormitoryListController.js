@@ -161,6 +161,7 @@ App.controller('DormitoryListController', [
             controller: function ($scope, ngDialog, ShareService) {
                 $scope.item = ShareService.getData();
                 $scope.selectedApplication = null;
+                $scope.showApplication = false;
                 console.log($scope.item);
                 $scope.applications = [{
                     "id" : 1,
@@ -199,7 +200,12 @@ App.controller('DormitoryListController', [
                     "content" : "申请理由2",
                     "status" : "APPROVED"
                 }];
-                
+                $scope.$watch("$select.selected", function (value) {
+                    console.log($scope.selectedApplication);
+                });
+                $scope.updateSelectionStatus = function(value) {
+                    $scope.selectedApplication = value;
+                }
                 $scope.cancel = function() {
                     ngDialog.close();
                 }

@@ -6,18 +6,20 @@
       <div class="form-group">
          <label for="input-typeTrans" class="col-sm-12 text-center">检索或选择迁入的员工...</label>
          <div class="col-sm-12">
-            <ui-select ng-model="selectedApplication" theme="bootstrap" ng-disabled="disabled" class="text-left">
+            <ui-select ng-model="selectedApplication" theme="bootstrap" ng-disabled="disabled" ng-click="updateSelectionStatus($select.selected)" class="text-left">
                <ui-select-match placeholder="输入员工的部分信息...">{{ $select.selected.employees[0].name }}</ui-select-match>
-               <ui-select-choices repeat="application in applications | filter: $select.search">
-                  <span ng-bind-html="application.employees[0].name | highlight: $select.search"></span>身份证：
-                  <small ng-bind-html="application.employees[0].idNum | highlight: $select.search"></small>所属中心：
-                  <small ng-bind-html="application.employees[0].department | highlight: $select.search"></small>
+               <ui-select-choices repeat="application in applications | filter: $select.search"><b ng-bind="application.employees[0].name | highlight: $select.search"></b>
+                  <div>身份证：
+                     <small ng-bind="application.employees[0].idNum | highlight: $select.search"></small>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;所属中心：
+                     <small ng-bind="application.employees[0].department | highlight: $select.search"></small>
+                  </div>
                </ui-select-choices>
             </ui-select>
          </div>
       </div>
    </form>
    <form name="checkInForm" novalidate="" ng-show="selectedApplication" class="form-horizontal form-validate">
+      <hr/>
       <div class="form-group">
          <label for="input-name" class="col-sm-2 control-label">姓名</label>
          <div class="col-sm-4">

@@ -5,15 +5,17 @@ div
     .form-group
       label.col-sm-12.text-center(for='input-typeTrans') 检索或选择迁入的员工...
       .col-sm-12
-        ui-select.text-left(ng-model='selectedApplication', theme='bootstrap', ng-disabled='disabled')
+        ui-select.text-left(ng-model='selectedApplication', theme='bootstrap', ng-disabled='disabled', ng-click='updateSelectionStatus($select.selected)')
           ui-select-match(placeholder='输入员工的部分信息...') {{ $select.selected.employees[0].name }}
           ui-select-choices(repeat='application in applications | filter: $select.search')
-            span(ng-bind-html='application.employees[0].name | highlight: $select.search')
-            | 身份证：
-            small(ng-bind-html='application.employees[0].idNum | highlight: $select.search')
-            | 所属中心：
-            small(ng-bind-html='application.employees[0].department | highlight: $select.search')
+            b(ng-bind='application.employees[0].name | highlight: $select.search')
+            div 身份证：
+              small(ng-bind='application.employees[0].idNum | highlight: $select.search')
+              | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;所属中心：
+              small(ng-bind='application.employees[0].department | highlight: $select.search')
+
   form.form-horizontal.form-validate(name="checkInForm", novalidate='', ng-show="selectedApplication")
+    hr
     .form-group
       label.col-sm-2.control-label(for='input-name') 姓名
       .col-sm-4
