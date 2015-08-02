@@ -4,82 +4,116 @@
 <div ng-controller="AccommodationController as table" class="container-fluid">
    <div class="panel panel-default">
       <div class="panel-heading">
-         <form class="pull-right hidden-xs form-inline">
-            <div dropdown="dropdown" class="btn-group">
-               <button dropdown-toggle="" class="btn btn-default btn-sm">全部校区<b class="caret"></b>
+         <form class="pull-right hidden-xs form-inline">地址：
+            <!-- START box placeholder-->
+            <div dropdown="dropdown" is-open="campusOpen" class="btn-group">
+               <button dropdown-toggle="" style="min-width:90px;" class="btn btn-info btn-sm">
+                  <span ng-show="selectedCampus" ng-bind="selectedCampus" class="pull-left"></span>
+                  <span ng-hide="selectedCampus" class="pull-left">所有校区</span><b style="margin-top:8px" class="caret pull-right"></b>
                </button>
                <ul role="menu" class="dropdown-menu">
-                  <li><a href="#">鼓楼</a>
+                  <li><a href="#" ng-click="selectCampus(&quot;&quot;)">所有校区</a>
                   </li>
-                  <li><a href="#">仙林</a>
+                  <li ng-repeat="(key, value) in addressTree">
+                     <a href="#" ng-click="selectCampus(key)" ng-bind="key"></a>
                   </li>
                </ul>
             </div>
             <!-- END button group-->
             <!-- START box placeholder-->
-            <div dropdown="dropdown" class="btn-group">
-               <button dropdown-toggle="" class="btn btn-default btn-sm">全部楼幢<b class="caret"></b>
+            <div dropdown="dropdown" is-open="addressOpen" ng-show="selectedCampus" class="btn-group">
+               <button dropdown-toggle="" style="min-width:90px;" class="btn btn-info btn-sm">
+                  <span ng-show="selectedAddress" ng-bind="selectedAddress" class="pull-left"></span>
+                  <span ng-hide="selectedAddress" class="pull-left">所有地址</span><b style="margin-top:8px" class="caret pull-right"></b>
                </button>
                <ul role="menu" class="dropdown-menu">
-                  <li><a href="#">小粉桥平房</a>
+                  <li><a href="#" ng-click="selectAddress(&quot;&quot;)">所有地址</a>
                   </li>
-                  <li><a href="#">陶园新村</a>
+                  <li ng-repeat="(key, value) in addressTree[selectedCampus]" ng-if="!selectedCampus">
+                     <a href="#" ng-click="selectAddress(key)" ng-bind="key"></a>
+                  </li>
+                  <li ng-repeat="(key, value) in addressTree[selectedCampus]" ng-if="selectedCampus">
+                     <a href="#" ng-click="selectAddress(key)" ng-bind="key"></a>
                   </li>
                </ul>
             </div>
             <!-- END button group-->
             <!-- START box placeholder-->
-            <div dropdown="dropdown" class="btn-group">
-               <button dropdown-toggle="" class="btn btn-default btn-sm">全部楼层<b class="caret"></b>
+            <div dropdown="dropdown" is-open="floorOpen" ng-show="selectedCampus &amp;&amp; selectedAddress" class="btn-group">
+               <button dropdown-toggle="" style="min-width:90px;" class="btn btn-info btn-sm">
+                  <span ng-show="selectedFloor" ng-bind="selectedFloor" class="pull-left"></span>
+                  <span ng-hide="selectedFloor" class="pull-left">所有楼层</span><b style="margin-top:8px" class="caret pull-right"></b>
                </button>
                <ul role="menu" class="dropdown-menu">
-                  <li><a href="#">1层</a>
+                  <li><a href="#" ng-click="selectFloor(&quot;&quot;)">所有楼层</a>
                   </li>
-                  <li><a href="#">2层</a>
+                  <li ng-repeat="(key, value) in addressTree[selectedCampus][selectedAddress]">
+                     <a href="#" ng-click="selectFloor(key)" ng-bind="key"></a>
                   </li>
                </ul>
             </div>
             <!-- END button group-->
-            <!-- START box placeholder-->
-            <div dropdown="dropdown" class="btn-group">
-               <button dropdown-toggle="" class="btn btn-default btn-sm">宿舍类型<b class="caret"></b>
+            <!-- START box placeholder-->&nbsp;&nbsp;类型：
+            <div dropdown="dropdown" is-open="typeOpen" class="btn-group">
+               <button dropdown-toggle="" style="min-width:105px;" class="btn btn-info btn-sm">
+                  <span ng-show="selectedType" ng-bind="selectedType" class="pull-left"></span>
+                  <span ng-hide="selectedType" class="pull-left">所有类型</span><b style="margin-top:8px" class="caret pull-right"></b>
                </button>
                <ul role="menu" class="dropdown-menu">
-                  <li><a href="#">集体宿舍 - 男</a>
+                  <li><a href="#" ng-click="selectType(&quot;&quot;)">所有类型</a>
                   </li>
-                  <li><a href="#">集体宿舍 - 女</a>
+                  <li><a href="#" ng-click="selectType(&quot;集体宿舍 - 男&quot;)">集体宿舍 - 男</a>
                   </li>
-                  <li><a href="#">夫妻房</a>
+                  <li><a href="#" ng-click="selectType(&quot;集体宿舍 - 女&quot;)">集体宿舍 - 女</a>
+                  </li>
+                  <li><a href="#" ng-click="selectType(&quot;夫妻房&quot;)">夫妻房</a>
                   </li>
                </ul>
             </div>
             <!-- END button group-->
-            <input type="text" ng-model="searchDormitory" placeholder="表格搜索..." class="form-control input-sm form-horizontal" />
-            <button ng-click="table.tableParams.sorting({})" class="btn btn-default btn-sm">全部复位</button>
+            <!-- START box placeholder-->&nbsp;&nbsp;状态：
+            <div dropdown="dropdown" is-open="statusOpen" class="btn-group">
+               <button dropdown-toggle="" style="min-width:90px;" class="btn btn-info btn-sm">
+                  <span ng-show="selectedStatus" ng-bind="selectedStatus" class="pull-left"></span>
+                  <span ng-hide="selectedStatus" class="pull-left">所有状态</span><b style="margin-top:8px" class="caret pull-right"></b>
+               </button>
+               <ul role="menu" class="dropdown-menu">
+                  <li><a href="#" ng-click="selectStatus(&quot;&quot;)">所有状态</a>
+                  </li>
+                  <li><a href="#" ng-click="selectStatus(&quot;在住&quot;)">在住</a>
+                  </li>
+                  <li><a href="#" ng-click="selectStatus(&quot;已迁出&quot;)">已迁出</a>
+                  </li>
+               </ul>
+            </div>
+            <!-- END button group-->
+            <input type="text" ng-model="searchKeywords" placeholder="表格搜索..." class="form-control input-sm form-horizontal" />
+            <button ng-click="searchKeywords=&quot;&quot;; selectCampus(&quot;&quot;); selectType(&quot;&quot;);" class="btn btn-info btn-sm">复位</button>
          </form>
          <div class="panel-title">入住信息列表</div>
       </div>
       <table ng-table="table.tableParams" class="table">
          <tbody>
-            <tr ng-repeat="user in $data">
+            <tr ng-repeat="accommodationItem in accommodationItems">
                <td width="40" header="'ng-table/headers/checkbox.html'">
                   <div class="checkbox c-checkbox">
                      <label>
-                        <input type="checkbox" ng-model="checkboxes.items[user.id]" />
+                        <input type="checkbox" ng-model="checkboxes.items[accommodationItem.accommodations[0].accommodationId]" />
                         <span class="fa fa-check"></span>
                      </label>
                   </div>
                </td>
-               <td data-title="'宿舍地址'" sortable="'addressDetail'">鼓楼 - 小粉桥平房 - 1层 - 101</td>
-               <td data-title="'类型'" sortable="'type'" width="100" class="text-center">集体宿舍 - 男</td>
+               <td data-title="'宿舍地址'" sortable="'addressDetail'">{{ accommodationItem.dormitory.addressDetailCN }}</td>
+               <td data-title="'类型'" sortable="'type'" width="100" class="text-center">{{ accommodationItem.dormitory.typeCN }}</td>
                <td data-title="'员工'">
-                  <div class="btn btn-primary btn-xs">王大锤</div>
+                  <div ng-repeat="accommodation in accommodationItem.accommodations" ng-click="showEmployee(accommodation.employee)" class="btn btn-primary btn-xs">{{ accommodation.employee.name }}</div>
                </td>
-               <td data-title="'迁入时间'" sortable="'checkInDate'" width="100" class="text-center">2012-01-01</td>
-               <td data-title="'迁出时间'" sortable="'checkOutDate'" width="100" class="text-center">/</td>
-               <td data-title="'状态'" sortable="'status'" width="70" class="text-center">在住</td>
+               <td data-title="'迁入时间'" sortable="'accommodations[0].checkInDate'" width="100" class="text-center">{{ accommodationItem.accommodations[0].checkInDate }}</td>
+               <td data-title="'迁出时间'" sortable="'accommodations[0].checkOutDate'" width="100" ng-show="accommodationItem.accommodations[0].checkOutDate" class="text-center">{{ accommodationItem.accommodations[0].checkOutDate }}</td>
+               <td data-title="'迁出时间'" sortable="'accommodations[0].checkOutDate'" width="100" ng-hide="accommodationItem.accommodations[0].checkOutDate" class="text-center">/</td>
+               <td data-title="'状态'" sortable="'statusCN'" width="70" class="text-center">{{ accommodationItem.statusCN }}</td>
                <td data-title="'操作'" width="80" class="text-center">
-                  <button title="迁出" data-ng-click="modify(user)" class="btn btn-danger btn-xs"><i class="fa fa-sign-out"></i>
+                  <button title="迁出" data-ng-click="checkOut(accommodationItem)" class="btn btn-danger btn-xs"><i class="fa fa-sign-out"></i>
                   </button>
                </td>
             </tr>
@@ -90,8 +124,4 @@
          <div class="checkbox c-checkbox"><label><input type="checkbox" ng-model="checkboxes.checked" id="select_all" name="filter-checkbox" value=""/><span class="fa fa-check"></span></label></div>
       </script>
    </div>
-   <!-- 修改信息的弹窗-->
-   <script type="text/ng-template" id="modifyDialog">
-      <div><legend><h3 class="mt0">修改宿舍信息</h3></legend><form method="get" action="/" class="form-horizontal"><div class="form-group"><label for="input-name" class="col-sm-2 control-label">地址</label><div class="col-sm-10"><input id="input-id-1" type="text" disabled="disabled" ng-model="modifiyingUser.name" class="form-control"/></div></div><div class="form-group"><label for="input-age" class="col-sm-2 control-label">宿舍号</label><div class="col-sm-10"><input id="input-id-1" type="text" ng-pattern="/^[0-9]+$/" ng-model="modifiyingUser.age" class="form-control"/></div></div><div class="form-group"><label for="input-age" class="col-sm-2 control-label">类型</label><div class="col-sm-10"><input id="input-id-1" type="text" ng-pattern="/^[0-9]+$/" ng-model="modifiyingUser.age" class="form-control"/></div></div><div class="form-group"><label for="input-money" class="col-sm-2 control-label">核定</label><div class="col-sm-10"><input id="input-id-1" type="number" ng-model="modifiyingUser.money" class="form-control"/></div></div><div class="form-group"><label for="input-money" class="col-sm-2 control-label">实际</label><div class="col-sm-10"><input id="input-id-1" type="number" ng-model="modifiyingUser.money" class="form-control"/></div></div></form><div class="row"><div class="container-fluid"><span class="pull-right"><button type="button" ng-click="cancel()" class="btn btn-default mr">取消</button><button type="button" ng-click="submitModify()" class="btn btn-warning">修改</button></span></div></div></div>
-   </script>
 </div>

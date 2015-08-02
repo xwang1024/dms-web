@@ -5,7 +5,7 @@ h3 列表视图
   .panel.panel-default
     .panel-heading
       form.pull-right.hidden-xs.form-inline
-        | 筛选：
+        | 地址：
         // START box placeholder
         .btn-group(dropdown='dropdown', is-open="campusOpen")
           button.btn.btn-info.btn-sm(dropdown-toggle="", style="min-width:90px;")
@@ -44,8 +44,25 @@ h3 列表视图
             li(ng-repeat='(key, value) in addressTree[selectedCampus][selectedAddress]')
               a(href='#', ng-click='selectFloor(key)', ng-bind="key")
         // END button group
+        // START box placeholder
+        | &nbsp;&nbsp;类型：
+        .btn-group(dropdown='dropdown', is-open="statusOpen")
+          button.btn.btn-info.btn-sm(dropdown-toggle="", style="min-width:105px;")
+            span.pull-left(ng-show="selectedStatus" , ng-bind="selectedStatus")
+            span.pull-left(ng-hide="selectedType") 所有类型
+            b.caret.pull-right(style="margin-top:8px")
+          ul.dropdown-menu(role='menu')
+            li
+              a(href='#', ng-click='selectType("")') 所有类型
+            li
+              a(href='#', ng-click='selectType("集体宿舍 - 男")') 集体宿舍 - 男
+            li
+              a(href='#', ng-click='selectType("集体宿舍 - 女")') 集体宿舍 - 女
+            li
+              a(href='#', ng-click='selectType("夫妻房")') 夫妻房
+        // END button group
         input.form-control.input-sm.form-horizontal(type='text', ng-model="searchKeywords", placeholder='表格搜索...')
-        button.btn.btn-info.btn-sm(ng-click='searchKeywords=""; selectCampus("")') 复位
+        button.btn.btn-info.btn-sm(ng-click='searchKeywords=""; selectCampus(""); selectType("");') 复位
       .panel-title 宿舍列表
         
     //- ng-table指明了使用什么样的参数来创建表格，export-csv是插件ng-table-export的功能，仅能导出为csv

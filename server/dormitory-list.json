@@ -12,7 +12,7 @@
 			"doorplate":"1A116",
 			"type":"GROUP_MALE",
 			"capacityCnt":6,
-			"occupieCnt":2
+			"occupiedCnt":2
 			},
 			"employees":[
 			{
@@ -59,7 +59,7 @@
 			"doorplate":"2B111",
 			"type":"GROUP_FEMALE",
 			"capacityCnt":6,
-			"occupieCnt":1
+			"occupiedCnt":1
 			},
 			"employees":[
 			{
@@ -92,7 +92,7 @@
 			"doorplate":"3B115",
 			"type":"COUPLE",
 			"capacityCnt":2,
-			"occupieCnt":2
+			"occupiedCnt":2
 			},
 			"employees":[
 			{
@@ -103,13 +103,8 @@
 				"department":"接待",
 				"dutyDate":"2014-2-23",
 				"workLocationDetail":"",
-				"spouseType":"NONE",
-				"outsideSpouse" : {
-	        		"name" : "",
-	        		"gender":"",
-	        		"idNum" : "",
-	        		"workLocationDetail" : ""
-   				 }
+				"spouseType":"INNER",
+				"outsideSpouse" : {}
 			},{
 				"id":301,
 				"name":"测试夫妻女一",
@@ -118,19 +113,11 @@
 				"department":"接待",
 				"dutyDate":"2014-1-5",
 				"workLocationDetail":"",
-				"spouseType":"NONE",
-				"outsideSpouse" : {
-        		"name" : "",
-        		"gender":"",
-        		"idNum" : "",
-        		"workLocationDetail" : ""
-   				 }
+				"spouseType":"INNER",
+				"outsideSpouse" : {}
 			}
 			]
-		},
-
-
-		{
+		},{
 			"dormitory":{
 			"id":4,
 			"campus":"鼓楼",
@@ -139,7 +126,7 @@
 			"doorplate":"104",
 			"type":"GROUP_MALE",
 			"capacityCnt":8,
-			"occupieCnt":2
+			"occupiedCnt":2
 			},
 			"employees":[
 						
@@ -184,11 +171,9 @@
 			"doorplate":"7",
 			"type":"COUPLE",
 			"capacityCnt":2,
-			"occupieCnt":2
+			"occupiedCnt":2
 			},
-			"employees":[
-						
-			{
+			"employees":[{
 				"id":302,
 				"name":"测试夫妻男二",
 				"gender":"MALE",
@@ -196,16 +181,14 @@
 				"department":"膳食",
 				"dutyDate":"2014-5-12",
 				"workLocationDetail":"",
-				"spouseType":"FEMALE",
+				"spouseType":"OUTER",
 				"outsideSpouse" : {
-        		"name" : "测试夫妻女二",
-        		"gender":"FEMALE",
-        		"idNum" : "320282123481193232",
-        		"workLocationDetail" : ""
-   				 }
-			}
-
-			]
+	        		"name" : "测试夫妻女二",
+	        		"gender":"FEMALE",
+	        		"idNum" : "320282123481193232",
+	        		"workLocationDetail" : ""
+   				}
+			}]
 		},{
 			"dormitory":{
 			"id":6,
@@ -215,7 +198,7 @@
 			"doorplate":"223",
 			"type":"UNKNOWN",
 			"capacityCnt":6,
-			"occupieCnt":3
+			"occupiedCnt":3
 			},
 			"employees":[
 			{

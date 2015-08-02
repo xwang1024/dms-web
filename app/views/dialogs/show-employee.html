@@ -29,46 +29,73 @@
             <input id="input-dutyDate" type="text" name="dutyDate" ng-model="employee.dutyDate" required="" disabled="" class="form-control" />
          </div>
       </div>
-      <h3>配偶情况</h3>
-      <hr/>
-      <div ng-if="employee.spouseType==&quot;NONE&quot;" class="form-group">
-         <label for="input-capacityCnt" class="col-sm-2 control-label">类型</label>
-         <div class="col-sm-10">
-            <input id="input-capacityCnt" type="text" name="capacityCnt" ng-model="employee.spouseTypeCN" required="" disabled="" class="form-control" />
-         </div>
-      </div>
-      <div ng-if="employee.spouseType==&quot;OUTER&quot;" class="form-group">
-         <label for="input-capacityCnt" class="col-sm-2 control-label">姓名</label>
+      <h3>配偶情况&nbsp;&nbsp;
+         <small ng-bind="employee.spouseTypeCN" style="font-size:12px;"></small>
+      </h3>
+      <hr style="margin-top: 0;" />
+   </form>
+   <form ng-if="employee.spouseType==&quot;OUTER&quot;" class="form-horizontal">
+      <div class="form-group">
+         <label for="input-outer-name" class="col-sm-2 control-label">姓名</label>
          <div class="col-sm-4">
-            <input id="input-capacityCnt" type="text" name="capacityCnt" ng-model="employee.outsideSpouse.name" required="" disabled="" class="form-control" />
+            <input id="input-outer-name" type="text" name="outer-name" ng-model="employee.outsideSpouse.name" required="" disabled="" class="form-control" />
          </div>
-         <label for="input-capacityCnt" class="col-sm-2 control-label">性别</label>
+         <label for="input-outer-gender" class="col-sm-2 control-label">性别</label>
          <div class="col-sm-4">
-            <input id="input-capacityCnt" type="text" name="capacityCnt" ng-model="employee.spouseTypeCN.genderCN" required="" disabled="" class="form-control" />
+            <input id="input-outer-gender" type="text" name="outer-gender" ng-model="employee.outsideSpouse.genderCN" required="" disabled="" class="form-control" />
          </div>
       </div>
-      <div ng-if="employee.spouseType==&quot;OUTER&quot;" class="form-group">
-         <label for="input-capacityCnt" class="col-sm-2 control-label">身份证</label>
+      <div class="form-group">
+         <label for="input-outer-idNum" class="col-sm-2 control-label">身份证</label>
          <div class="col-sm-10">
-            <input id="input-capacityCnt" type="text" name="capacityCnt" ng-model="employee.spouseTypeCN.idNum" required="" disabled="" class="form-control" />
+            <input id="input-outer-idNum" type="text" name="outer-idNum" ng-model="employee.outsideSpouse.idNum" required="" disabled="" class="form-control" />
          </div>
       </div>
-      <div ng-if="employee.spouseType==&quot;OUTER&quot;" class="form-group">
-         <label for="input-capacityCnt" class="col-sm-2 control-label">单位</label>
+      <div class="form-group">
+         <label for="input-outer-workLocationDetail" class="col-sm-2 control-label">单位</label>
          <div class="col-sm-10">
-            <input id="input-capacityCnt" type="text" name="capacityCnt" ng-model="employee.spouseTypeCN.workLocationDetail" required="" disabled="" class="form-control" />
-         </div>
-      </div>
-      <div class="row">
-         <div class="container-fluid">
-            <div style="margin-top: 6px;" class="pull-left">
-               <small>如需修改员工信息，请使用<a href="#">员工管理</a>
-               </small>
-            </div>
-            <div class="pull-right">
-               <button type="button" ng-click="cancel()" class="btn btn-default">返回</button>
-            </div>
+            <input id="input-outer-workLocationDetail" type="text" name="outer-workLocationDetail" ng-model="employee.outsideSpouse.workLocationDetail" required="" disabled="" class="form-control" />
          </div>
       </div>
    </form>
+   <form ng-if="employee.spouseType==&quot;INNER&quot;" class="form-horizontal">
+      <div class="form-group">
+         <label for="input-inner-name" class="col-sm-2 control-label">姓名</label>
+         <div class="col-sm-4">
+            <input id="input-inner-name" type="text" name="inner-name" ng-model="employee.innerSpouse.name" required="" disabled="" class="form-control" />
+         </div>
+         <label for="input-inner-gender" class="col-sm-2 control-label">性别</label>
+         <div class="col-sm-4">
+            <input id="input-inner-gender" type="text" name="inner-gender" ng-model="employee.innerSpouse.genderCN" required="" disabled="" class="form-control" />
+         </div>
+      </div>
+      <div class="form-group">
+         <label for="input-inner-idNum" class="col-sm-2 control-label">身份证</label>
+         <div class="col-sm-10">
+            <input id="input-inner-idNum" type="text" name="inner-idNum" ng-model="employee.innerSpouse.idNum" required="" disabled="" class="form-control" />
+         </div>
+      </div>
+      <div class="form-group">
+         <label for="input-inner-department" class="col-sm-2 control-label">中心</label>
+         <div class="col-sm-4">
+            <input id="input-inner-department" type="text" name="inner-department" ng-model="employee.innerSpouse.department" required="" disabled="" class="form-control" />
+         </div>
+         <label for="input-inner-dutyDate" class="col-sm-2 control-label">入职</label>
+         <div class="col-sm-4">
+            <input id="input-inner-dutyDate" type="text" name="inner-dutyDate" ng-model="employee.innerSpouse.dutyDate" required="" disabled="" class="form-control" />
+         </div>
+      </div>
+   </form>
+   <div class="row">
+      <div class="container-fluid">
+         <div style="margin-top: 6px;" class="pull-left">
+            <small>如需修改员工信息，请使用<a href="#">员工管理</a>
+            </small>
+         </div>
+         <div class="pull-right">
+            <button type="button" ng-click="cancel()" class="btn btn-default">返回</button>
+            <button type="button" ng-click="checkOut()" class="btn btn-warning">迁出</button>
+         </div>
+      </div>
+   </div>
 </div>

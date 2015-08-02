@@ -1,109 +1,147 @@
 App.controller('AccommodationController', [
-    '$scope', '$http', '$state','$filter','ngTableParams','$resource', '$timeout', 'ngTableDataService', 'ngDialog', 'ShareService',
-    function($scope, $http, $state, $filter, ngTableParams, $resource, $timeout, ngTableDataService, ngDialog, ShareService) {
-
+    '$scope', '$http', '$state','$filter','ngTableParams','$resource', '$timeout', 'ngTableDataService', 'ngDialog', 'ShareService', 'AccommodationService',
+    function($scope, $http, $state, $filter, ngTableParams, $resource, $timeout, ngTableDataService, ngDialog, ShareService, AccommodationService) {
     'use strict';
     var vm = this;
-    var data = [{id: 1, name: "Moroni", age: 50, money: -10},
-                {id: 2, name: "Tiancum", age: 43,money: 120},
-                {id: 3, name: "Jacob", age: 27, money: 5.5},
-                {id: 4, name: "Nephi", age: 29,money: -54},
-                {id: 5, name: "Enos", age: 34,money: 110},
-                {id: 6, name: "Tiancum", age: 43, money: 1000},
-                {id: 7, name: "Jacob", age: 27,money: -201},
-                {id: 8, name: "Nephi", age: 29, money: 100},
-                {id: 9, name: "Enos", age: 34, money: -52.5},
-                {id: 10, name: "Tiancum", age: 43, money: 52.1},
-                {id: 11, name: "Jacob", age: 27, money: 110},
-                {id: 12, name: "Nephi", age: 29, money: -55},
-                {id: 13, name: "Enos", age: 34, money: 551},
-                {id: 14, name: "Tiancum", age: 43, money: -1410},
-                {id: 15, name: "Jacob", age: 27, money: 410},
-                {id: 16, name: "Nephi", age: 29, money: 100},
-                {id: 17, name: "Enos", age: 34, money: -100}];
+
+    // ========== 数据区 ==========
+    var data = null;
+    $scope.addressTree = {};
+
+    // -------- 搜索关键词 --------
+    $scope.selectedCampus = "";
+    $scope.selectedAddress = "";
+    $scope.selectedFloor = "";
+    $scope.selectedType = "";
+    $scope.selectedStatus = "";
+    $scope.searchKeywords = "";
+    // ----------------------------
+    // ============================
+
+    var showTableData = function($defer, params) {
+        var searchedData = searchData(data);
+        var orderedData = params.sorting() ? $filter('orderBy')(searchedData, params.orderBy()) : searchedData;
+        params.total(orderedData.length);
+        $defer.resolve($scope.accommodationItems = orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count()));
+    }
 
     vm.tableParams = new ngTableParams({
         page: 1,            // show first page
         count: 10           // count per page
     }, {
-        total: data.length, // length of data
+        total: 0, // length of data
+        counts: [10, 20, 50],
         getData: function($defer, params) {
-            // 执行搜索
-            var searchedData = searchData();
-
-            var orderedData = params.sorting() ? $filter('orderBy')(searchedData, params.orderBy()) : searchedData;
-            orderedData = params.filter() ? $filter('filter')(orderedData, params.filter()) : orderedData;
-
-            params.total(orderedData.length); // set total for recalc pagination
-            $defer.resolve($scope.users = orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count()));
+            if(!data) {
+                AccommodationService.queryFullList({
+                    success : function(response) {
+                        if(response.status) {
+                            data = AccommodationService.preprocessData(response.result);
+                            showTableData($defer, params);
+                        } else {
+                            alert("列表获取失败");
+                        }
+                        console.log("success", data);
+                    },
+                    error : function(data, status, headers, config) {
+                        alert("GET Error");
+                    }
+                });
+            } else {
+                showTableData($defer, params);
+            }
         }
     });
 
-    $scope.$watch("searchDormitory", function () {
+    // ========== 区域监听 ==========
+    $scope.$watch("searchKeywords", function () {
         vm.tableParams.reload();
     });
+    // ==============================
 
-    var searchData = function(){
+    // ========== 下拉框内a标签的click动作 ==========
+    $scope.selectCampus = function(campus) {
+        $scope.selectedCampus = campus;
+        $scope.campusOpen = false;
+        $scope.selectedAddress = "";
+        $scope.selectedFloor = "";
+        vm.tableParams.reload();
+    }
+    $scope.selectAddress = function(address) {
+        $scope.selectedAddress = address;
+        $scope.addressOpen = false;
+        $scope.selectedFloor = "";
+        vm.tableParams.reload();
+    }
+    $scope.selectFloor = function(floor) {
+        $scope.selectedFloor = floor;
+        $scope.floorOpen = false;
+        vm.tableParams.reload();
+    }
+    $scope.selectType = function(type) {
+        $scope.selectedType = type;
+        $scope.typeOpen = false;
+        vm.tableParams.reload();
+    }
+    $scope.selectStatus = function(status) {
+        $scope.selectedStatus = status;
+        $scope.statusOpen = false;
+        vm.tableParams.reload();
+    }
+    // ==============================
+
+
+    // ========== 数据相关操作 ==========
+    var initAddressTree = function() {
+        var path = "server/address-tree.json";
+        $http.get(path)
+        .success(function(response) {
+            $scope.addressTree = response;
+        })
+        .error(function(data, status, headers, config) {
+          alert("Address Tree init failure!");
+        });
+    }
+    initAddressTree();
+
+    var searchData = function() {
         var filterData = data;
-        if($scope.searchDormitory) {
-            var keywords = $scope.searchDormitory.split(" ");
+        if($scope.searchKeywords) {
+            var keywords = $scope.searchKeywords.split(" ");
             var i;
             for(i in keywords) {
-                filterData = $filter('filter')(filterData,keywords[i]);
+                filterData = $filter('filter')(filterData, keywords[i]);
             }
         }
+        if($scope.selectedCampus)filterData = $filter('filter')(filterData, { dormitory : { campus : $scope.selectedCampus}});
+        if($scope.selectedAddress) filterData = $filter('filter')(filterData, { dormitory : { address : $scope.selectedAddress}});
+        if($scope.selectedFloor) filterData = $filter('filter')(filterData, { dormitory : { floor : $scope.selectedFloor}});
+        if($scope.selectedType) filterData = $filter('filter')(filterData, { dormitory : { typeCN : $scope.selectedType}});
+        if($scope.selectedStatus) filterData = $filter('filter')(filterData, { statusCN : $scope.selectedStatus });
         return filterData;
     }
+    // ======================================
 
-    var inArray = Array.prototype.indexOf ?
-    function (val, arr) {
-        return arr.indexOf(val)
-    } :
-    function (val, arr) {
-        var i = arr.length;
-        while (i--) {
-            if (arr[i] === val) return i;
-        }
-        return -1
-    };
-    $scope.names = function(column) {
-        var def = $q.defer(),
-        arr = [],
-        names = [];
-        angular.forEach(data, function(item){
-            if (inArray(item.name, arr) === -1) {
-                arr.push(item.name);
-                names.push({
-                    'id': item.name,
-                    'title': item.name
-                });
-            }
-        });
-        def.resolve(names);
-        return def;
-    };
-
+    // ========== 表格Checkbox ==========
     $scope.checkboxes = { 'checked': false, items: {} };
-
-    // 监视总checkbox
+    // 总checkbox
     $scope.$watch('checkboxes.checked', function(value) {
-        angular.forEach($scope.users, function(item) {
-            if (angular.isDefined(item.id)) {
-                $scope.checkboxes.items[item.id] = value;
+        angular.forEach($scope.accommodationItems, function(item) {
+            if (angular.isDefined(item.accommodations[0].accommodationId)) {
+                $scope.checkboxes.items[item.accommodations[0].accommodationId] = value;
             }
         });
     });
-
-    // 监视子checkbox
+    // 子checkbox
     $scope.$watch('checkboxes.items', function(values) {
-        if (!$scope.users) {
+        if (!$scope.accommodationItems) {
             return;
         }
         var checked = 0, unchecked = 0,
-        total = $scope.users.length;
-        angular.forEach($scope.users, function(item) {
-            checked   +=  ($scope.checkboxes.items[item.id]) || 0;
-            unchecked += (!$scope.checkboxes.items[item.id]) || 0;
+        total = $scope.accommodationItems.length;
+        angular.forEach($scope.accommodationItems, function(item) {
+            checked   +=  ($scope.checkboxes.items[item.accommodations[0].accommodationId]) || 0;
+            unchecked += (!$scope.checkboxes.items[item.accommodations[0].accommodationId]) || 0;
         });
         if ((unchecked == 0) || (checked == 0)) {
             $scope.checkboxes.checked = (checked == total);
@@ -111,23 +149,9 @@ App.controller('AccommodationController', [
         // grayed checkbox
         angular.element(document.getElementById("select_all")).prop("indeterminate", (checked != 0 && unchecked != 0));
     }, true);
+    // ===================================
 
     // 每一行的修改按钮
     $scope.modify = function($user) {
-        ShareService.setData(angular.copy($user));
-        ngDialog.open({ template: 'modifyDialog', controller: 'DormitoryModifyController', data: {user: $user} });
     }
-}]);
-
-App.controller('DormitoryModifyController', [
-  "$scope", "ngDialog", "ShareService",
-  function ($scope, ngDialog, ShareService) {
-  'user strict';
-  $scope.modifiyingUser = ShareService.getData();
-  $scope.submitModify = function () {
-    console.log($scope.modifiyingUser);
-  };
-  $scope.cancel = function() {
-    ngDialog.close();
-  }
 }]);

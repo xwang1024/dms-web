@@ -4,7 +4,7 @@
 <div ng-controller="DormitoryListController as table" class="container-fluid">
    <div class="panel panel-default">
       <div class="panel-heading">
-         <form class="pull-right hidden-xs form-inline">筛选：
+         <form class="pull-right hidden-xs form-inline">地址：
             <!-- START box placeholder-->
             <div dropdown="dropdown" is-open="campusOpen" class="btn-group">
                <button dropdown-toggle="" style="min-width:90px;" class="btn btn-info btn-sm">
@@ -53,8 +53,26 @@
                </ul>
             </div>
             <!-- END button group-->
+            <!-- START box placeholder-->&nbsp;&nbsp;类型：
+            <div dropdown="dropdown" is-open="statusOpen" class="btn-group">
+               <button dropdown-toggle="" style="min-width:105px;" class="btn btn-info btn-sm">
+                  <span ng-show="selectedStatus" ng-bind="selectedStatus" class="pull-left"></span>
+                  <span ng-hide="selectedType" class="pull-left">所有类型</span><b style="margin-top:8px" class="caret pull-right"></b>
+               </button>
+               <ul role="menu" class="dropdown-menu">
+                  <li><a href="#" ng-click="selectType(&quot;&quot;)">所有类型</a>
+                  </li>
+                  <li><a href="#" ng-click="selectType(&quot;集体宿舍 - 男&quot;)">集体宿舍 - 男</a>
+                  </li>
+                  <li><a href="#" ng-click="selectType(&quot;集体宿舍 - 女&quot;)">集体宿舍 - 女</a>
+                  </li>
+                  <li><a href="#" ng-click="selectType(&quot;夫妻房&quot;)">夫妻房</a>
+                  </li>
+               </ul>
+            </div>
+            <!-- END button group-->
             <input type="text" ng-model="searchKeywords" placeholder="表格搜索..." class="form-control input-sm form-horizontal" />
-            <button ng-click="searchKeywords=&quot;&quot;; selectCampus(&quot;&quot;)" class="btn btn-info btn-sm">复位</button>
+            <button ng-click="searchKeywords=&quot;&quot;; selectCampus(&quot;&quot;); selectType(&quot;&quot;);" class="btn btn-info btn-sm">复位</button>
          </form>
          <div class="panel-title">宿舍列表</div>
       </div>
