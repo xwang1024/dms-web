@@ -71,8 +71,25 @@ App.service('DialogService', ['$rootScope', '$q', '$http', 'ngDialog', 'Dormitor
 		};
 
 		// 迁出确认对话框
-		this.openCheckOutConfirmDialog = function(employee) {
-			// TODO
+		this.openCheckOutConfirmDialog = function(accommodationItem) {
+			ShareService.setData(angular.copy(accommodationItem));
+			ngDialog.open({
+	            template: 'app/views/dialogs/check-out-confirm.html',
+	            controller: function ($scope, ngDialog, ShareService) {
+	                $scope.accommodationItem = ShareService.getData();
+	                console.log($scope.accommodationItem);
+	                // ===== 对话框操作 ===== 
+	                $scope.submitCheckOut = function () {
+	                    $scope.submitted = true;
+	                    // TODO 提交迁出操作
+	                };
+
+	                $scope.cancel = function() {
+	                    ngDialog.close();
+	                }
+	                // ====================== 
+	            }
+	        });
 		};
 
 		// 修改宿舍对话框

@@ -1,6 +1,6 @@
 App.controller('AccommodationController', [
-    '$scope', '$http', '$state','$filter','ngTableParams','$resource', '$timeout', 'ngTableDataService', 'ngDialog', 'ShareService', 'AccommodationService',
-    function($scope, $http, $state, $filter, ngTableParams, $resource, $timeout, ngTableDataService, ngDialog, ShareService, AccommodationService) {
+    '$scope', '$http', '$state','$filter','ngTableParams','$resource', '$timeout', 'ngTableDataService', 'ngDialog', 'DialogService', 'AccommodationService',
+    function($scope, $http, $state, $filter, ngTableParams, $resource, $timeout, ngTableDataService, ngDialog, DialogService, AccommodationService) {
     'use strict';
     var vm = this;
 
@@ -152,6 +152,7 @@ App.controller('AccommodationController', [
     // ===================================
 
     // 每一行的修改按钮
-    $scope.modify = function($user) {
+    $scope.checkOut = function(accommodationItem) {
+        DialogService.openCheckOutConfirmDialog(accommodationItem);
     }
 }]);

@@ -1,3 +1,16 @@
 div
   legend
     h3.mt0 住户迁出
+  .row
+    .container-fluid
+      .text-center 将
+        span.bg-primary(ng-repeat="accommodation in accommodationItem.accommodations", ng-bind="accommodation.employee.name", style="padding:3px;border-radius:3px;")
+        | &nbsp;从
+        span.bg-warning-dark(ng-bind="accommodationItem.dormitory.addressDetailCN", style="padding:3px;border-radius:3px;")
+        | &nbsp;迁出？
+      br
+  .row
+    .container-fluid
+      span.pull-right
+        button.btn.btn-default.mr(type='button', ng-click='cancel()') 取消
+        button.btn.btn-danger(type='button', ng-click='submitCheckOut()') 迁出
